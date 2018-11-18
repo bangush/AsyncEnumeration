@@ -13,12 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-     <ProjectReference Include="../UtilPack/UtilPack.csproj" />
+     <PackageReference Include="UtilPack" Version="1.6.0" />
   </ItemGroup>
 
   <!-- Assembly information stuff -->
   <PropertyGroup>
-     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <VersionPrefix>1.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <AssemblyTitle>$(AssemblyName)</AssemblyTitle>
