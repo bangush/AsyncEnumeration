@@ -35,5 +35,5 @@
     <Title>Asynchronous Enumeration</Title>
   </PropertyGroup>
 
-
+  <Import Project="$(CIPropsFilePath)" Condition=" '$(CIPropsFilePath)' != '' and Exists('$(CIPropsFilePath)') " />
 </Project>
