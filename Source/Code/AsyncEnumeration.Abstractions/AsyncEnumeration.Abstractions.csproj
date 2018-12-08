@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-     <PackageReference Include="UtilPack" Version="1.6.0" />
+     <PackageReference Include="UtilPack" Version="1.7.0" />
   </ItemGroup>
 
   <!-- Assembly information stuff -->
@@ -34,5 +34,5 @@
     <Title>Asynchronous Enumeration</Title>
   </PropertyGroup>
 
-
+  <Import Project="$(CIPropsFilePath)" Condition=" '$(CIPropsFilePath)' != '' and Exists('$(CIPropsFilePath)') " />
 </Project>
