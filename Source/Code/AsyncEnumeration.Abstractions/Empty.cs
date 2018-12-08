@@ -62,9 +62,9 @@ namespace AsyncEnumeration.Abstractions
       public static IAsyncEnumerator<T> Enumerator { get; } = new EmptyAsyncEnumerator();
 
       /// <summary>
-      /// Gets the <see cref="IAsyncConcurrentEnumerable{T}"/> which will always return <see cref="IAsyncConcurrentEnumerable{T}"/> with no items.
+      /// Gets the <see cref="IAsyncEnumerable{T}"/> which will always return <see cref="IAsyncEnumerator{T}"/> with no items.
       /// </summary>
-      /// <value>The <see cref="IAsyncConcurrentEnumerable{T}"/> which will always return <see cref="IAsyncConcurrentEnumerable{T}"/> with no items.</value>
+      /// <value>The <see cref="IAsyncEnumerable{T}"/> which will always return <see cref="IAsyncEnumerator{T}"/> with no items.</value>
       public static IAsyncEnumerable<T> Enumerable { get; } = new EmptyAsyncEnumerable();
 
    }

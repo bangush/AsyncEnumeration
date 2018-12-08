@@ -495,7 +495,7 @@ namespace AsyncEnumeration.Observability
    }
 }
 
-public static partial class E_UtilPack
+public static partial class E_AsyncEnumeration
 {
    /// <summary>
    /// Adds observability aspect to this <see cref="IAsyncEnumerable{T}"/>, if it is not already present.
