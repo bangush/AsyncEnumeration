@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Abstractions", "AsyncEnumeration.Abstractions\AsyncEnumeration.Abstractions.csproj", "{3668ED21-4578-4432-8350-95705C9E2A40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Abstractions", "Code\AsyncEnumeration.Abstractions\AsyncEnumeration.Abstractions.csproj", "{3668ED21-4578-4432-8350-95705C9E2A40}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Implementation.Enumerable", "AsyncEnumeration.Implementation.Enumerable\AsyncEnumeration.Implementation.Enumerable.csproj", "{11AAA24C-11BC-46E6-BB14-6F91591EF688}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Implementation.Enumerable", "Code\AsyncEnumeration.Implementation.Enumerable\AsyncEnumeration.Implementation.Enumerable.csproj", "{11AAA24C-11BC-46E6-BB14-6F91591EF688}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Implementation.Provider", "AsyncEnumeration.Implementation.Provider\AsyncEnumeration.Implementation.Provider.csproj", "{6A910269-5C7B-402E-8B7C-9E083D81F7FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Implementation.Provider", "Code\AsyncEnumeration.Implementation.Provider\AsyncEnumeration.Implementation.Provider.csproj", "{6A910269-5C7B-402E-8B7C-9E083D81F7FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Observability", "AsyncEnumeration.Observability\AsyncEnumeration.Observability.csproj", "{A1928B28-0B97-4334-85B6-A75366DB7E01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Observability", "Code\AsyncEnumeration.Observability\AsyncEnumeration.Observability.csproj", "{A1928B28-0B97-4334-85B6-A75366DB7E01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Observability.Implementation", "AsyncEnumeration.Observability.Implementation\AsyncEnumeration.Observability.Implementation.csproj", "{01B90BC8-D19C-47F6-A700-21ED559552EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Observability.Implementation", "Code\AsyncEnumeration.Observability.Implementation\AsyncEnumeration.Observability.Implementation.csproj", "{01B90BC8-D19C-47F6-A700-21ED559552EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.AsyncEnumeration.Implementation", "Tests\Tests.AsyncEnumeration.Implementation\Tests.AsyncEnumeration.Implementation.csproj", "{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{01B90BC8-D19C-47F6-A700-21ED559552EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01B90BC8-D19C-47F6-A700-21ED559552EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01B90BC8-D19C-47F6-A700-21ED559552EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
