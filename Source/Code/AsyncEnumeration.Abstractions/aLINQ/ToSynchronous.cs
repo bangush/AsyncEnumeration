@@ -38,9 +38,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="collection">The collection to add to.</param>
    /// <param name="addItem">The callback to add the to the <paramref name="collection"/>.</param>
    /// <returns>Potentially asynchronously returns the amount of items encountered.</returns>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateAsync{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
    /// <exception cref="ArgumentNullException">If <paramref name="addItem"/> is <c>null</c>.</exception>
    public static ValueTask<Int64> AddToCollectionAsync<T, TCollection>( this IAsyncEnumerable<T> enumerable, TCollection collection, Action<TCollection, T> addItem )
@@ -60,9 +57,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="collection">The collection to add to.</param>
    /// <param name="addItem">The callback to add the to the <paramref name="collection"/>.</param>
    /// <returns>Potentially asynchronously returns the amount of items encountered.</returns>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateAsync{T}(IAsyncEnumerable{T}, Func{T, Task})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
    /// <exception cref="ArgumentNullException">If <paramref name="addItem"/> is <c>null</c>.</exception>
    public static ValueTask<Int64> AddToCollectionAsync<T, TCollection>( this IAsyncEnumerable<T> enumerable, TCollection collection, Func<TCollection, T, Task> addItem )
@@ -80,9 +74,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
    /// <returns>An array of enumerated items.</returns>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateAsync{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    public static async Task<T[]> ToArrayAsync<T>( this IAsyncEnumerable<T> enumerable )
       => ( await enumerable.ToListAsync() ).ToArray();
 
@@ -93,9 +84,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
    /// <returns>A <see cref="List{T}"/> of enumerated items.</returns>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateAsync{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    public static async Task<List<T>> ToListAsync<T>( this IAsyncEnumerable<T> enumerable )
    {
       ArgumentValidator.ValidateNotNullReference( enumerable );
@@ -115,9 +103,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="valueSelector">The callback to create a dictionary value from enumerable item.</param>
    /// <param name="equalityComparer">The optional <see cref="IEqualityComparer{T}"/> to use when creating dictionary.</param>
    /// <returns>Asynchronously returns a <see cref="IDictionary{TKey, TValue}"/> containing keys and values as returned by <paramref name="keySelector"/> and <paramref name="valueSelector"/>.</returns>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateAsync{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
    /// <exception cref="ArgumentNullException">If either of <paramref name="keySelector"/> or <paramref name="valueSelector"/> is <c>null</c>.</exception>
    public static async Task<IDictionary<TKey, TValue>> ToDictionaryAsync<T, TKey, TValue>(
@@ -147,9 +132,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="valueSelector">The callback to potentially asynchronously create a dictionary value from enumerable item.</param>
    /// <param name="equalityComparer">The optional <see cref="IEqualityComparer{T}"/> to use when creating dictionary.</param>
    /// <returns>Asynchronously returns a <see cref="IDictionary{TKey, TValue}"/> containing keys and values as returned by <paramref name="keySelector"/> and <paramref name="valueSelector"/>.</returns>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateAsync{T}(IAsyncEnumerable{T}, Func{T, Task})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
    /// <exception cref="ArgumentNullException">If either of <paramref name="keySelector"/> or <paramref name="valueSelector"/> is <c>null</c>.</exception>
    public static async Task<IDictionary<TKey, TValue>> ToDictionaryAsync<T, TKey, TValue>(
@@ -177,9 +159,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="collection">The collection to add to.</param>
    /// <param name="addItem">The callback to add the to the <paramref name="collection"/>. May be executed concurrently.</param>
    /// <returns>Potentially asynchronously returns the amount of items encountered.</returns>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
    /// <exception cref="ArgumentNullException">If <paramref name="addItem"/> is <c>null</c>.</exception>
    public static ValueTask<Int64> AddToConcurrentCollectionAsync<T, TCollection>( this IAsyncEnumerable<T> enumerable, TCollection collection, Action<TCollection, T> addItem )
@@ -199,9 +178,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="collection">The collection to add to.</param>
    /// <param name="addItem">The callback to asynchronously add the to the <paramref name="collection"/>. May be executed concurrently.</param>
    /// <returns>Potentially asynchronously returns the amount of items encountered.</returns>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Func{T, Task})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
    /// <exception cref="ArgumentNullException">If <paramref name="addItem"/> is <c>null</c>.</exception>
    public static ValueTask<Int64> AddToConcurrentCollectionAsync<T, TCollection>( this IAsyncEnumerable<T> enumerable, TCollection collection, Func<TCollection, T, Task> addItem )
@@ -220,9 +196,6 @@ public static partial class E_AsyncEnumeration
    /// <typeparam name="T">The type of items being enumerated.</typeparam>
    /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
    /// <returns>A new <see cref="ConcurrentBag{T}"/> holding all items encountered while enumerating this <see cref="IAsyncEnumerable{T}"/>.</returns>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
    public static async Task<ConcurrentBag<T>> ToConcurrentBagAsync<T>( this IAsyncEnumerable<T> enumerable )
    {
@@ -237,9 +210,6 @@ public static partial class E_AsyncEnumeration
    /// <typeparam name="T">The type of items being enumerated.</typeparam>
    /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
    /// <returns>A new <see cref="ConcurrentQueue{T}"/> holding all items encountered while enumerating this <see cref="IAsyncEnumerable{T}"/>.</returns>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
    public static async Task<ConcurrentQueue<T>> ToConcurrentQueueAsync<T>( this IAsyncEnumerable<T> enumerable )
    {
@@ -254,9 +224,6 @@ public static partial class E_AsyncEnumeration
    /// <typeparam name="T">The type of items being enumerated.</typeparam>
    /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
    /// <returns>A new <see cref="ConcurrentStack{T}"/> holding all items encountered while enumerating this <see cref="IAsyncEnumerable{T}"/>.</returns>
-   /// <remarks>
-   /// This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </remarks>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
    public static async Task<ConcurrentStack<T>> ToConcurrentStackAsync<T>( this IAsyncEnumerable<T> enumerable )
    {
@@ -278,9 +245,6 @@ public static partial class E_AsyncEnumeration
    /// The motivation for this method is that often the items enumerated by <see cref="IAsyncEnumerable{T}"/> are "incomplete" in a sense that they require additional asynchronous processing (e.g. reading SQL row values, or reading the content of HTTP response).
    /// Using <see cref="Select{T, U}(IAsyncEnumerable{T}, Func{T, ValueTask{U}})"/> method will force the <see cref="IAsyncEnumerable{T}"/> into sequential enumerable, which may be undesired.
    /// Therefore, using this method directly it is possible to enumerate this <see cref="IAsyncEnumerable{T}"/> possibly concurrently into <see cref="ConcurrentBag{T}"/> while transforming each enumerable item into other type.
-   /// </para>
-   /// <para>
-   /// This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
    /// </para>
    /// </remarks>
    public static async Task<ConcurrentBag<U>> ToConcurrentBagAsync<T, U>( this IAsyncEnumerable<T> enumerable, Func<T, Task<U>> selector )
@@ -305,9 +269,6 @@ public static partial class E_AsyncEnumeration
    /// Using <see cref="Select{T, U}(IAsyncEnumerable{T}, Func{T, ValueTask{U}})"/> method will force the <see cref="IAsyncEnumerable{T}"/> into sequential enumerable, which may be undesired.
    /// Therefore, using this method directly it is possible to enumerate this <see cref="IAsyncEnumerable{T}"/> possibly concurrently into <see cref="ConcurrentQueue{T}"/> while transforming each enumerable item into other type.
    /// </para>
-   /// <para>
-   /// This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </para>
    /// </remarks>
    public static async Task<ConcurrentQueue<U>> ToConcurrentQueueAsync<T, U>( this IAsyncEnumerable<T> enumerable, Func<T, Task<U>> selector )
    {
@@ -331,9 +292,6 @@ public static partial class E_AsyncEnumeration
    /// Using <see cref="Select{T, U}(IAsyncEnumerable{T}, Func{T, ValueTask{U}})"/> method will force the <see cref="IAsyncEnumerable{T}"/> into sequential enumerable, which may be undesired.
    /// Therefore, using this method directly it is possible to enumerate this <see cref="IAsyncEnumerable{T}"/> possibly concurrently into <see cref="ConcurrentStack{T}"/> while transforming each enumerable item into other type.
    /// </para>
-   /// <para>
-   /// This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </para>
    /// </remarks>
    public static async Task<ConcurrentStack<U>> ToConcurrentStackAsync<T, U>( this IAsyncEnumerable<T> enumerable, Func<T, Task<U>> selector )
    {
@@ -355,8 +313,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="equalityComparer">The optional <see cref="IEqualityComparer{T}"/> to use when creating dictionary.</param>
    /// <returns>Asynchronously returns a <see cref="IDictionary{TKey, TValue}"/> containing keys and values as returned by <paramref name="keySelector"/> and <paramref name="valueSelector"/>.</returns>
    /// <remarks>
-   /// <para>This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </para>
    /// <para>
    /// TODO currently this will not throw if there are duplicate keys, unlike <see cref="ToDictionaryAsync{T, TKey, TValue}(IAsyncEnumerable{T}, Func{T, TKey}, Func{T, TValue}, IEqualityComparer{TKey})"/> method.
    /// The behaviour needs to be unified/parametrized at some point.
@@ -393,8 +349,6 @@ public static partial class E_AsyncEnumeration
    /// <param name="equalityComparer">The optional <see cref="IEqualityComparer{T}"/> to use when creating dictionary.</param>
    /// <returns>Asynchronously returns a <see cref="IDictionary{TKey, TValue}"/> containing keys and values as returned by <paramref name="keySelector"/> and <paramref name="valueSelector"/>.</returns>
    /// <remarks>
-   /// <para>This method will always use <see cref="E_UtilPack.EnumerateConcurrentlyIfPossible{T}(IAsyncEnumerable{T}, Action{T})"/> method to enumerate this <see cref="IAsyncEnumerable{T}"/>.
-   /// </para>
    /// <para>
    /// TODO currently this will not throw if there are duplicate keys, unlike <see cref="ToDictionaryAsync{T, TKey, TValue}(IAsyncEnumerable{T}, Func{T, TKey}, Func{T, TValue}, IEqualityComparer{TKey})"/> method.
    /// The behaviour needs to be unified/parametrized at some point.

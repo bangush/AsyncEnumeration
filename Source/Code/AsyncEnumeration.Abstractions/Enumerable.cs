@@ -26,6 +26,9 @@ namespace System.Collections.Generic
    /// This interface mimics <see cref="IEnumerable{T}"/> for enumerables which must perform asynchronous waiting when moving to next item.
    /// </summary>
    /// <typeparam name="T">The type of items being enumerated. This parameter is covariant.</typeparam>
+   /// <remarks>
+   /// Use <see cref="E_AsyncEnumeration.EnumerateAsync{T}(IAsyncEnumerable{T}, Action{T})"/> and <see cref="E_AsyncEnumeration.EnumerateAsync{T}(IAsyncEnumerable{T}, Func{T, Task})"/> extension methods to enumerate enumerable, until C# 8.0 comes out.
+   /// </remarks>
    public interface IAsyncEnumerable<out T> : IAsyncEnumerable
    {
       /// <summary>
@@ -41,11 +44,14 @@ namespace System.Collections.Generic
    /// Such scenario is common in e.g. enumerating SQL query results.
    /// </summary>
    /// <typeparam name="T">The type of the items being enumerated. This parameter is covariant.</typeparam>
+   /// <remarks>
+   /// 
+   /// </remarks>
    public interface IAsyncEnumerator<out T> : IAsyncDisposable
    {
       /// <summary>
       /// This method mimics <see cref="System.Collections.IEnumerator.MoveNext"/> method in order to asynchronously read the next item.
-      /// Please note that instead of directly using this method, one should use <see cref="E_UtilPack.EnumerateAsync{T}(IAsyncEnumerable{T}, Action{T})"/>, <see cref="E_UtilPack.EnumerateAsync{T}(IAsyncEnumerable{T}, Func{T, Task})"/>´extension methods, as those methods will take care of properly finishing enumeration in case of exceptions.
+      /// Please note that instead of directly using this method, one should use <see cref="E_AsyncEnumeration.EnumerateAsync{T}(IAsyncEnumerable{T}, Action{T})"/> and <see cref="E_AsyncEnumeration.EnumerateAsync{T}(IAsyncEnumerable{T}, Func{T, Task})"/> extension methods, as those methods will take care of properly finishing enumeration in case of exceptions.
       /// </summary>
       /// <returns>A task, which will return <c>true</c> if next item is encountered, and <c>false</c> if this enumeration ended.</returns>
       Task<Boolean> WaitForNextAsync();

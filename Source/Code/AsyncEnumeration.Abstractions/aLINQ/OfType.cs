@@ -37,16 +37,29 @@ namespace AsyncEnumeration.Abstractions
       IAsyncEnumerable<U> OfType<T, U>( IAsyncEnumerable<T> enumerable );
    }
 
-
+   /// <summary>
+   /// This struct exists to make life easier when using async variation of <see cref="System.Linq.Enumerable.OfType"/>, the <see cref="E_AsyncEnumeration.Of"/>.
+   /// </summary>
+   /// <typeparam name="T"></typeparam>
    public struct OfTypeInvoker<T>
    {
       private readonly IAsyncEnumerable<T> _source;
 
+      /// <summary>
+      /// Creates new instance of <see cref="OfTypeInvoker{T}"/> with given <see cref="IAsyncEnumerable{T}"/>.
+      /// </summary>
+      /// <param name="source">The <see cref="IAsyncEnumerable{T}"/>.</param>
+      /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <c>null</c>.</exception>
       public OfTypeInvoker( IAsyncEnumerable<T> source )
       {
          this._source = ArgumentValidator.ValidateNotNull( nameof( source ), source );
       }
 
+      /// <summary>
+      /// Calls <see cref="IAsyncProvider.OfType"/> with <typeparamref name="T"/> as first type parameter, and <typeparamref name="U"/> as second type parameter.
+      /// </summary>
+      /// <typeparam name="U">The type to filter the elements of the <see cref="IAsyncEnumerable{T}"/> on.</typeparam>
+      /// <returns>Filtered <see cref="IAsyncEnumerable{T}"/> with all the items of <typeparamref name="U"/>.</returns>
       public IAsyncEnumerable<U> Type<U>()
       {
          return (
@@ -60,16 +73,10 @@ namespace AsyncEnumeration.Abstractions
 public static partial class E_AsyncEnumeration
 {
 
-
-   // Invoking this is a bit awkward, so OfTypeInfo<T> accepting variants are provided. 
-   // Need to wait for https://github.com/dotnet/csharplang/blob/master/proposals/default-interface-methods.md to do this properly.
-   // Synchronous version uses IEnumerable interface without generic parameters, but that causes extra API to maintain, and one heap allocation for every struct item encountered (struct -> object boxing).
-
    /// <summary>
    /// This extension method will return <see cref="IAsyncEnumerable{T}"/> which will return only those items which are of given type.
    /// </summary>
    /// <typeparam name="T">The type of source enumerable items.</typeparam>
-   /// <typeparam name="U">The type of target items.</typeparam>
    /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
    /// <returns><see cref="IAsyncEnumerable{T}"/> which will return only those items which are of given type.</returns>
    /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
