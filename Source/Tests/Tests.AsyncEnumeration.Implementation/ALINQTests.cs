@@ -60,5 +60,43 @@ namespace Tests.AsyncEnumeration.Implementation
          var array = await AsyncEnumerable.Neverending( 1, asyncProvider: DefaultAsyncProvider.Instance ).TakeWhile( async item => { await Task.Delay( 100 ); return ++idx <= 3; } ).ToArrayAsync();
          Assert.IsTrue( ArrayEqualityComparer<Int32>.ArrayEquality( array, Enumerable.Repeat( 1, 3 ).ToArray() ) );
       }
+
+      [TestMethod]
+      public async Task TestSelectMany1()
+      {
+         var array = await AsyncEnumerable.Range( 0, 1, DefaultAsyncProvider.Instance ).SelectMany( x => new[] { x, x + 1 } ).ToArrayAsync();
+         Assert.IsTrue( ArrayEqualityComparer<Int32>.ArrayEquality( array, new[] { 0, 1 } ) );
+      }
+
+      [TestMethod]
+      public async Task TestSelectMany2()
+      {
+         var array = await AsyncEnumerable.Range( 0, 1, DefaultAsyncProvider.Instance ).SelectMany( x => AsyncEnumerable.Range( x, x + 2, DefaultAsyncProvider.Instance ) ).ToArrayAsync();
+         Assert.IsTrue( ArrayEqualityComparer<Int32>.ArrayEquality( array, new[] { 0, 1 } ) );
+      }
+
+      [TestMethod]
+      public async Task TestSelectMany3()
+      {
+         var array = await AsyncEnumerable.Range( 0, 1, DefaultAsyncProvider.Instance ).SelectMany( async x =>
+         {
+            await Task.Delay( 100 );
+            return new[] { x, x + 1 } as IEnumerable<Int32>;
+         } ).ToArrayAsync();
+         Assert.IsTrue( ArrayEqualityComparer<Int32>.ArrayEquality( array, new[] { 0, 1 } ) );
+      }
+
+      [TestMethod]
+      public async Task TestSelectMany4()
+      {
+         var array = await AsyncEnumerable.Range( 0, 1, DefaultAsyncProvider.Instance ).SelectMany( async x =>
+         {
+            await Task.Delay( 100 );
+            return AsyncEnumerable.Range( x, x + 2, DefaultAsyncProvider.Instance );
+         } ).ToArrayAsync();
+         Assert.IsTrue( ArrayEqualityComparer<Int32>.ArrayEquality( array, new[] { 0, 1 } ) );
+      }
+
+
    }
 }
