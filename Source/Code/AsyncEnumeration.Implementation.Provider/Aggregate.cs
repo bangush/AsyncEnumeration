@@ -26,7 +26,6 @@ using UtilPack;
 namespace AsyncEnumeration.Implementation.Provider
 {
 
-
    public partial class DefaultAsyncProvider
    {
       private const Int32 INITIAL = 0;

@@ -31,21 +31,39 @@ namespace AsyncEnumeration.Implementation.Enumerable
    /// </summary>
    public static class AsyncEnumerationFactory
    {
+      /// <summary>
+      /// Creates a new <see cref="IAsyncEnumerable{T}"/> which will use the given callback as implementation for <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> method.
+      /// </summary>
+      /// <typeparam name="T">The type of items being iterated.</typeparam>
+      /// <param name="getEnumerator">The callback for <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> implementation.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> to use.</param>
+      /// <returns>A new instance of <see cref="IAsyncEnumerable{T}"/> with given parameters.</returns>
+      /// <exception cref="ArgumentNullException">If either of <paramref name="getEnumerator"/> or <paramref name="asyncProvider"/> is <c>null</c>.</exception>
       public static IAsyncEnumerable<T> FromGeneratorCallback<T>(
          Func<IAsyncEnumerator<T>> getEnumerator,
          IAsyncProvider asyncProvider
          )
       {
-         return new EnumerableGenerator<T>( asyncProvider, getEnumerator );
+         return new AsyncEnumerableFunctionalWrapper<T>( asyncProvider, getEnumerator );
       }
 
+      /// <summary>
+      /// Creates a new <see cref="IAsyncEnumerable{T}"/> which will use the given callback as implementation for <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> method.
+      /// </summary>
+      /// <typeparam name="T">The type of items being iterated.</typeparam>
+      /// <typeparam name="TArg">The type of argument for the callback.</typeparam>
+      /// <param name="arg">The argument for the <paramref name="getEnumerator"/> callback.</param>
+      /// <param name="getEnumerator">The callback for <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/> implementation, which will receive <paramref name="arg"/> as its argument.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> to use.</param>
+      /// <returns>A new instance of <see cref="IAsyncEnumerable{T}"/> with given parameters.</returns>
+      /// <exception cref="ArgumentNullException">If either of <paramref name="getEnumerator"/> or <paramref name="asyncProvider"/> is <c>null</c>.</exception>
       public static IAsyncEnumerable<T> FromGeneratorCallback<T, TArg>(
          TArg arg,
          Func<TArg, IAsyncEnumerator<T>> getEnumerator,
          IAsyncProvider asyncProvider
          )
       {
-         return new EnumerableGenerator<T, TArg>( asyncProvider, arg, getEnumerator );
+         return new AsyncEnumerableFunctionalWrapper<T, TArg>( asyncProvider, arg, getEnumerator );
       }
 
       /// <summary>
@@ -53,6 +71,7 @@ namespace AsyncEnumeration.Implementation.Enumerable
       /// </summary>
       /// <typeparam name="T">The type of items being enumerated.</typeparam>
       /// <param name="enumerationStart">The callback to create a new <see cref="SequentialEnumerationStartInfo{T}"/> for each new <see cref="IAsyncEnumerator{T}"/>.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
       /// <returns>A new instance of <see cref="IAsyncEnumerable{T}"/> which behaves like <see cref="SequentialEnumerationStartInfo{T}"/> returned by <paramref name="enumerationStart"/> specifies.</returns>
       /// <remarks>
       /// If <paramref name="enumerationStart"/> is <c>null</c>, then result is empty enumerable.
@@ -60,19 +79,20 @@ namespace AsyncEnumeration.Implementation.Enumerable
       /// <seealso cref="CreateSequentialStartInfo{T}(MoveNextAsyncDelegate{T}, EnumerationEndedDelegate)"/>
       public static IAsyncEnumerable<T> CreateSequentialEnumerable<T>(
          Func<SequentialEnumerationStartInfo<T>> enumerationStart,
-         IAsyncProvider aLINQProvider
-         ) => enumerationStart == null ? EmptyAsync<T>.Enumerable : new AsyncSequentialOnlyEnumerable<T>( enumerationStart, aLINQProvider );
+         IAsyncProvider asyncProvider
+         ) => enumerationStart == null ? EmptyAsync<T>.Enumerable : new AsyncSequentialOnlyEnumerable<T>( enumerationStart, asyncProvider );
 
       /// <summary>
       /// Creates a new <see cref="IAsyncEnumerable{T}"/> which will allow at most one <see cref="IAsyncEnumerator{T}"/> to be active at once.
       /// </summary>
       /// <typeparam name="T">The type of items being enumerated.</typeparam>
       /// <param name="startInfo">The <see cref="SequentialEnumerationStartInfo{T}"/> containing callbacks to use.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
       /// <returns>A new instance of <see cref="IAsyncEnumerable{T}"/> which behaves like callbacks in <paramref name="startInfo"/> specified.</returns>
       public static IAsyncEnumerable<T> CreateExclusiveSequentialEnumerable<T>(
          SequentialEnumerationStartInfo<T> startInfo,
-         IAsyncProvider aLINQProvider
-         ) => new AsyncEnumerableExclusive<T>( SequentialCurrentInfoFactory.GetInstance( startInfo.MoveNext, startInfo.Dispose ), aLINQProvider );
+         IAsyncProvider asyncProvider
+         ) => new AsyncEnumerableExclusive<T>( SequentialCurrentInfoFactory.GetInstance( startInfo.MoveNext, startInfo.Dispose ), asyncProvider );
 
       /// <summary>
       /// Helper method to invoke constructor of <see cref="SequentialEnumerationStartInfo{T}"/> without explicitly specifying generic type arguments.
@@ -108,16 +128,17 @@ namespace AsyncEnumeration.Implementation.Enumerable
       /// </summary>
       /// <typeparam name="T">The type of items being enumerated.</typeparam>
       /// <param name="startInfoFactory">The callback creating a structure containing all the delegates that the calls to methods of <see cref="IAsyncEnumerator{T}"/> will be call-through to.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
       /// <returns>A new <see cref="IAsyncEnumerable{T}"/>, which will call the given <paramref name="startInfoFactory"/> on each call to <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/>, and the resulting <see cref="IAsyncEnumerator{T}"/> will pass each invocation of its methods the set of delegates returned by <paramref name="startInfoFactory"/>.</returns>
       /// <exception cref="ArgumentNullException">If <paramref name="startInfoFactory"/> is <c>null</c>.</exception>
       /// <seealso cref="WrappingEnumerationStartInfo{T}"/>
       /// <seealso cref="CreateWrappingStartInfo"/>
       public static IAsyncEnumerable<T> CreateStatefulWrappingEnumerable<T>(
          Func<WrappingEnumerationStartInfo<T>> startInfoFactory,
-         IAsyncProvider aLINQProvider
+         IAsyncProvider asyncProvider
          )
       {
-         return new StatefulAsyncEnumerableWrapper<T>( startInfoFactory, aLINQProvider );
+         return new StatefulAsyncEnumerableWrapper<T>( startInfoFactory, asyncProvider );
       }
 
       /// <summary>
@@ -127,15 +148,16 @@ namespace AsyncEnumeration.Implementation.Enumerable
       /// <typeparam name="T">The type of items being enumerated.</typeparam>
       /// <param name="startInfo">The <see cref="WrappingEnumerationStartInfo{T}"/> containing delegates that capture all signatures of all methods of <see cref="IAsyncEnumerator{T}"/> interface.</param>
       /// <returns>A new <see cref="IAsyncEnumerable{T}"/>, which will share the given delegates by all instances returned by <see cref="IAsyncEnumerable{T}.GetAsyncEnumerator"/>.</returns>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
       /// <exception cref="ArgumentNullException">If either of <see cref="WrappingEnumerationStartInfo{T}.WaitForNext"/> or <see cref="WrappingEnumerationStartInfo{T}.TryGetNext"/> delegates of <paramref name="startInfo"/> are <c>null</c>.</exception>
       /// <seealso cref="WrappingEnumerationStartInfo{T}"/>
       /// <seealso cref="CreateWrappingStartInfo"/>
       public static IAsyncEnumerable<T> CreateStatelessWrappingEnumerable<T>(
          WrappingEnumerationStartInfo<T> startInfo,
-         IAsyncProvider aLINQProvider
+         IAsyncProvider asyncProvider
          )
       {
-         return new StatelessAsyncEnumerableWrapper<T>( startInfo, aLINQProvider );
+         return new StatelessAsyncEnumerableWrapper<T>( startInfo, asyncProvider );
       }
 
       /// <summary>
@@ -173,6 +195,13 @@ namespace AsyncEnumeration.Implementation.Enumerable
          return new WrappingEnumerationStartInfo<T>( waitForNext, tryGetNext, dispose );
       }
 
+      /// <summary>
+      /// Helper method to create <see cref="WrappingEnumerationStartInfo{T}"/> which will return <c>true</c> only once for its <see cref="IAsyncEnumerator{T}.WaitForNextAsync"/> method, and the rest of the items are returned via <see cref="IAsyncEnumerator{T}.TryGetNext(out Boolean)"/> method.
+      /// </summary>
+      /// <typeparam name="T">The type of items being enumerated.</typeparam>
+      /// <param name="tryGetNext">The callback to get next item.</param>
+      /// <param name="dispose">The optional disposing callback.</param>
+      /// <returns></returns>
       public static WrappingEnumerationStartInfo<T> CreateSynchronousWrappingStartInfo<T>(
          TryGetNextDelegate<T> tryGetNext,
          EnumerationEndedDelegate dispose = null
@@ -239,29 +268,6 @@ namespace AsyncEnumeration.Implementation.Enumerable
    /// <returns>A task to perform asynchronous disposing. If no asynchronous disposing is needed, this delegate can return <c>null</c>.</returns>
    /// <seealso cref="AsyncEnumerationFactory.CreateSequentialEnumerator{T}(MoveNextAsyncDelegate{T}, EnumerationEndedDelegate)"/>
    public delegate Task EnumerationEndedDelegate();
-
-   /// <summary>
-   /// This delegate is used by <see cref="IAsyncConcurrentEnumerable{T}"/> created by <see cref="AsyncEnumerationFactory.CreateConcurrentEnumerable"/>.
-   /// </summary>
-   /// <typeparam name="TState">The type of state to pass to <see cref="GetNextItemAsyncDelegate{T, TMoveNextResult}"/>.</typeparam>
-   /// <returns>A tuple with information about success movenext operation.</returns>
-   /// <remarks>
-   /// The information is a tuple, where the elements are interpreted as following:
-   /// <list type="number">
-   /// <item><term><see cref="System.Boolean"/></term><description>Whether this fetch was a success. If enumerable has no more items, this should be <c>false</c>.</description></item>
-   /// <item><term><typeparamref name="TState"/></term><description>The state to pass to <see cref="GetNextItemAsyncDelegate{T, TMoveNextResult}"/>.</description></item>
-   /// </list>
-   /// </remarks>
-   public delegate (Boolean, TState) HasNextDelegate<TState>();
-
-   /// <summary>
-   /// This delegate is used by <see cref="IAsyncConcurrentEnumerable{T}"/> created by <see cref="AsyncEnumerationFactory.CreateConcurrentEnumerable"/>.
-   /// </summary>
-   /// <typeparam name="T">The type of items being enumerated.</typeparam>
-   /// <typeparam name="TMoveNextResult">The type of state returned by <see cref="HasNextDelegate{T}"/>.</typeparam>
-   /// <param name="moveNextResult">The state component of the result of the <see cref="HasNextDelegate{T}"/> call.</param>
-   /// <returns>A task to potentially asynchronously fetch the next item.</returns>
-   public delegate ValueTask<T> GetNextItemAsyncDelegate<T, in TMoveNextResult>( TMoveNextResult moveNextResult );
 
    /// <summary>
    /// This struct captures information required for callback-based <see cref="IAsyncEnumerator{T}"/>.

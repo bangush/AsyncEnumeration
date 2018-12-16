@@ -495,6 +495,10 @@ namespace AsyncEnumeration.Observability
    }
 }
 
+
+/// <summary>
+/// This class contains extension methods for types defined in this assembly and similar assemblies.
+/// </summary>
 public static partial class E_AsyncEnumeration
 {
    /// <summary>

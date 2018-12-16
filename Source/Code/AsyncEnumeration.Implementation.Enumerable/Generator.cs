@@ -27,23 +27,28 @@ using UtilPack;
 namespace AsyncEnumeration.Implementation.Enumerable
 {
 
-   internal sealed class EnumerableGenerator<T> : IAsyncEnumerable<T>
+   /// <summary>
+   /// This class implements <see cref="IAsyncEnumerable{T}"/> by using the given <see cref="IAsyncProvider"/> and callback to create <see cref="IAsyncEnumerator{T}"/>.
+   /// </summary>
+   /// <typeparam name="T">The type of items being enumerated.</typeparam>
+   internal sealed class AsyncEnumerableFunctionalWrapper<T> : IAsyncEnumerable<T>
    {
       private readonly Func<IAsyncEnumerator<T>> _getEnumerator;
       private readonly IAsyncProvider _asyncProvider;
 
       /// <summary>
-      /// Creates a new instance of <see cref="EnumerableWrapper{T}"/> with given callback.
+      /// Creates a new instance of <see cref="AsyncEnumerableFunctionalWrapper{T}"/> with given callback.
       /// </summary>
       /// <param name="getEnumerator">The callback to create <see cref="IAsyncEnumerator{T}"/>.</param>
-      /// <exception cref="ArgumentNullException">If <paramref name="getEnumerator"/> is <c>null</c>.</exception>
-      public EnumerableGenerator(
-         IAsyncProvider provider,
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> to use.</param>
+      /// <exception cref="ArgumentNullException">If either of <paramref name="getEnumerator"/> or <paramref name="asyncProvider"/> is <c>null</c>.</exception>
+      public AsyncEnumerableFunctionalWrapper(
+         IAsyncProvider asyncProvider,
          Func<IAsyncEnumerator<T>> getEnumerator
          )
       {
          this._getEnumerator = ArgumentValidator.ValidateNotNull( nameof( getEnumerator ), getEnumerator );
-         this._asyncProvider = ArgumentValidator.ValidateNotNull( nameof( provider ), provider );
+         this._asyncProvider = ArgumentValidator.ValidateNotNull( nameof( asyncProvider ), asyncProvider );
       }
 
       IAsyncProvider IAsyncEnumerable.AsyncProvider => this._asyncProvider;
@@ -51,26 +56,33 @@ namespace AsyncEnumeration.Implementation.Enumerable
       IAsyncEnumerator<T> IAsyncEnumerable<T>.GetAsyncEnumerator() => this._getEnumerator();
    }
 
-   internal sealed class EnumerableGenerator<T, TArg> : IAsyncEnumerable<T>
+   /// <summary>
+   /// This class implements <see cref="IAsyncEnumerable{T}"/> by using the given <see cref="IAsyncProvider"/>, callback to create <see cref="IAsyncEnumerator{T}"/>, and a argument for the callback.
+   /// </summary>
+   /// <typeparam name="T">The type of items being enumerated.</typeparam>
+   /// <typeparam name="TArg">The type of argument for the callback.</typeparam>
+   internal sealed class AsyncEnumerableFunctionalWrapper<T, TArg> : IAsyncEnumerable<T>
    {
       private readonly Func<TArg, IAsyncEnumerator<T>> _getEnumerator;
       private readonly IAsyncProvider _asyncProvider;
       private readonly TArg _arg;
 
       /// <summary>
-      /// Creates a new instance of <see cref="EnumerableWrapper{T}"/> with given callback.
+      /// Creates a new instance of <see cref="AsyncEnumerableFunctionalWrapper{T, TArg}"/> with given callback.
       /// </summary>
+      /// <param name="arg">The argument for <paramref name="getEnumerator"/> callback.</param>
       /// <param name="getEnumerator">The callback to create <see cref="IAsyncEnumerator{T}"/>.</param>
-      /// <exception cref="ArgumentNullException">If <paramref name="getEnumerator"/> is <c>null</c>.</exception>
-      public EnumerableGenerator(
-         IAsyncProvider provider,
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
+      /// <exception cref="ArgumentNullException">If either of <paramref name="getEnumerator"/> or <paramref name="asyncProvider"/> is <c>null</c>.</exception>
+      public AsyncEnumerableFunctionalWrapper(
+         IAsyncProvider asyncProvider,
          TArg arg,
          Func<TArg, IAsyncEnumerator<T>> getEnumerator
          )
       {
-         this._getEnumerator = ArgumentValidator.ValidateNotNull( nameof( getEnumerator ), getEnumerator );
          this._arg = arg;
-         this._asyncProvider = ArgumentValidator.ValidateNotNull( nameof( provider ), provider );
+         this._getEnumerator = ArgumentValidator.ValidateNotNull( nameof( getEnumerator ), getEnumerator );
+         this._asyncProvider = ArgumentValidator.ValidateNotNull( nameof( asyncProvider ), asyncProvider );
       }
 
       IAsyncProvider IAsyncEnumerable.AsyncProvider => this._asyncProvider;

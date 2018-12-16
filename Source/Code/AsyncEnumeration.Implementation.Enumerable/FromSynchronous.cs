@@ -99,6 +99,7 @@ namespace AsyncEnumeration.Implementation.Enumerable
       /// </summary>
       /// <typeparam name="T">The type of array elements.</typeparam>
       /// <param name="array">This array.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
       /// <returns><see cref="IAsyncEnumerable{T}"/> which will enumerate over the contents of the array.</returns>
       /// <exception cref="NullReferenceException">If this array is <c>null</c>.</exception>
       public static IAsyncEnumerable<T> AsAsyncEnumerable<T>(
@@ -111,6 +112,7 @@ namespace AsyncEnumeration.Implementation.Enumerable
       /// </summary>
       /// <typeparam name="T">The type of <see cref="IEnumerable{T}"/> elements.</typeparam>
       /// <param name="enumerable">This <see cref="IEnumerable{T}"/>.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
       /// <returns><see cref="IAsyncEnumerable{T}"/> which will enumerate over this <see cref="IEnumerable{T}"/>.</returns>
       /// <exception cref="NullReferenceException">If this <see cref="IEnumerable{T}"/> is <c>null</c>.</exception>
       public static IAsyncEnumerable<T> AsAsyncEnumerable<T>(
