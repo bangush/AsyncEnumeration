@@ -52,6 +52,32 @@ namespace AsyncEnumeration.Abstractions
       /// <exception cref="ArgumentNullException">If <paramref name="asyncSelector"/> is <c>null</c>.</exception>
       /// <seealso cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(IEnumerable{TSource}, Func{TSource, IEnumerable{TResult}})"/>
       IAsyncEnumerable<U> SelectMany<T, U>( IAsyncEnumerable<T> enumerable, Func<T, IAsyncEnumerable<U>> asyncSelector );
+
+      /// <summary>
+      /// This extension method will return <see cref="IAsyncEnumerable{T}"/> which will asynchronously flatten the items returned by given selector callback.
+      /// </summary>
+      /// <typeparam name="T">The type of source items.</typeparam>
+      /// <typeparam name="U">The type of target items.</typeparam>
+      /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
+      /// <param name="asyncSelector">The callback to asynchronously transform a single item into enumerable of items of type <typeparamref name="U"/>.</param>
+      /// <returns><see cref="IAsyncEnumerable{T}"/> which will return items as flattened asynchronous enumerable.</returns>
+      /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
+      /// <exception cref="ArgumentNullException">If <paramref name="asyncSelector"/> is <c>null</c>.</exception>
+      /// <seealso cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(IEnumerable{TSource}, Func{TSource, IEnumerable{TResult}})"/>
+      IAsyncEnumerable<U> SelectMany<T, U>( IAsyncEnumerable<T> enumerable, Func<T, Task<IEnumerable<U>>> asyncSelector );
+
+      /// <summary>
+      /// This extension method will return <see cref="IAsyncEnumerable{T}"/> which will asynchronously flatten the items returned by given selector callback.
+      /// </summary>
+      /// <typeparam name="T">The type of source items.</typeparam>
+      /// <typeparam name="U">The type of target items.</typeparam>
+      /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
+      /// <param name="asyncSelector">The callback to asynchronously transform a single item into asynchronous enumerable of items of type <typeparamref name="U"/>.</param>
+      /// <returns><see cref="IAsyncEnumerable{T}"/> which will return items as flattened asynchronous enumerable.</returns>
+      /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
+      /// <exception cref="ArgumentNullException">If <paramref name="asyncSelector"/> is <c>null</c>.</exception>
+      /// <seealso cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(IEnumerable{TSource}, Func{TSource, IEnumerable{TResult}})"/>
+      IAsyncEnumerable<U> SelectMany<T, U>( IAsyncEnumerable<T> enumerable, Func<T, Task<IAsyncEnumerable<U>>> asyncSelector );
    }
 
 }
@@ -84,5 +110,33 @@ public static partial class E_AsyncEnumeration
    /// <exception cref="ArgumentNullException">If <paramref name="asyncSelector"/> is <c>null</c>.</exception>
    /// <seealso cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(IEnumerable{TSource}, Func{TSource, IEnumerable{TResult}})"/>
    public static IAsyncEnumerable<U> SelectMany<T, U>( this IAsyncEnumerable<T> enumerable, Func<T, IAsyncEnumerable<U>> asyncSelector )
+      => ( enumerable.AsyncProvider ?? throw AsyncProviderUtilities.NoAsyncProviderException() ).SelectMany( enumerable, asyncSelector );
+
+   /// <summary>
+   /// This extension method will return <see cref="IAsyncEnumerable{T}"/> which will asynchronously flatten the items returned by given selector callback.
+   /// </summary>
+   /// <typeparam name="T">The type of source items.</typeparam>
+   /// <typeparam name="U">The type of target items.</typeparam>
+   /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
+   /// <param name="asyncSelector">The callback to asynchronously transform a single item into enumerable of items of type <typeparamref name="U"/>.</param>
+   /// <returns><see cref="IAsyncEnumerable{T}"/> which will return items as flattened asynchronous enumerable.</returns>
+   /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
+   /// <exception cref="ArgumentNullException">If <paramref name="asyncSelector"/> is <c>null</c>.</exception>
+   /// <seealso cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(IEnumerable{TSource}, Func{TSource, IEnumerable{TResult}})"/>
+   public static IAsyncEnumerable<U> SelectMany<T, U>( this IAsyncEnumerable<T> enumerable, Func<T, Task<IEnumerable<U>>> asyncSelector )
+      => ( enumerable.AsyncProvider ?? throw AsyncProviderUtilities.NoAsyncProviderException() ).SelectMany( enumerable, asyncSelector );
+
+   /// <summary>
+   /// This extension method will return <see cref="IAsyncEnumerable{T}"/> which will asynchronously flatten the items returned by given selector callback.
+   /// </summary>
+   /// <typeparam name="T">The type of source items.</typeparam>
+   /// <typeparam name="U">The type of target items.</typeparam>
+   /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
+   /// <param name="asyncSelector">The callback to asynchronously transform a single item into asynchronous enumerable of items of type <typeparamref name="U"/>.</param>
+   /// <returns><see cref="IAsyncEnumerable{T}"/> which will return items as flattened asynchronous enumerable.</returns>
+   /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
+   /// <exception cref="ArgumentNullException">If <paramref name="asyncSelector"/> is <c>null</c>.</exception>
+   /// <seealso cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(IEnumerable{TSource}, Func{TSource, IEnumerable{TResult}})"/>
+   public static IAsyncEnumerable<U> SelectMany<T, U>( this IAsyncEnumerable<T> enumerable, Func<T, Task<IAsyncEnumerable<U>>> asyncSelector )
       => ( enumerable.AsyncProvider ?? throw AsyncProviderUtilities.NoAsyncProviderException() ).SelectMany( enumerable, asyncSelector );
 }

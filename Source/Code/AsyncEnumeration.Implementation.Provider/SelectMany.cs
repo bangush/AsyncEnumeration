@@ -63,6 +63,43 @@ namespace AsyncEnumeration.Implementation.Provider
          ArgumentValidator.ValidateNotNull( nameof( asyncSelector ), asyncSelector );
          return FromTransformCallback( enumerable, asyncSelector, ( e, s ) => new SelectManyEnumeratorAsync<T, U>( e, s ) );
       }
+
+      /// <summary>
+      /// This extension method will return <see cref="IAsyncEnumerable{T}"/> which will asynchronously flatten the items returned by given selector callback.
+      /// </summary>
+      /// <typeparam name="T">The type of source items.</typeparam>
+      /// <typeparam name="U">The type of target items.</typeparam>
+      /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
+      /// <param name="asyncSelector">The callback to asynchronously transform a single item into enumerable of items of type <typeparamref name="U"/>.</param>
+      /// <returns><see cref="IAsyncEnumerable{T}"/> which will return items as flattened asynchronous enumerable.</returns>
+      /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
+      /// <exception cref="ArgumentNullException">If <paramref name="asyncSelector"/> is <c>null</c>.</exception>
+      /// <seealso cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(IEnumerable{TSource}, Func{TSource, IEnumerable{TResult}})"/>
+      public IAsyncEnumerable<U> SelectMany<T, U>( IAsyncEnumerable<T> enumerable, Func<T, Task<IEnumerable<U>>> asyncSelector )
+      {
+         ArgumentValidator.ValidateNotNullReference( enumerable );
+         ArgumentValidator.ValidateNotNull( nameof( asyncSelector ), asyncSelector );
+         return FromTransformCallback( enumerable, asyncSelector, ( e, s ) => new SelectManyAsyncEnumerator<T, U>( e, s ) );
+      }
+
+      /// <summary>
+      /// This extension method will return <see cref="IAsyncEnumerable{T}"/> which will asynchronously flatten the items returned by given selector callback.
+      /// </summary>
+      /// <typeparam name="T">The type of source items.</typeparam>
+      /// <typeparam name="U">The type of target items.</typeparam>
+      /// <param name="enumerable">This <see cref="IAsyncEnumerable{T}"/>.</param>
+      /// <param name="asyncSelector">The callback to asynchronously transform a single item into asynchronous enumerable of items of type <typeparamref name="U"/>.</param>
+      /// <returns><see cref="IAsyncEnumerable{T}"/> which will return items as flattened asynchronous enumerable.</returns>
+      /// <exception cref="NullReferenceException">If this <see cref="IAsyncEnumerable{T}"/> is <c>null</c>.</exception>
+      /// <exception cref="ArgumentNullException">If <paramref name="asyncSelector"/> is <c>null</c>.</exception>
+      /// <seealso cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(IEnumerable{TSource}, Func{TSource, IEnumerable{TResult}})"/>
+      public IAsyncEnumerable<U> SelectMany<T, U>( IAsyncEnumerable<T> enumerable, Func<T, Task<IAsyncEnumerable<U>>> asyncSelector )
+      {
+         ArgumentValidator.ValidateNotNullReference( enumerable );
+         ArgumentValidator.ValidateNotNull( nameof( asyncSelector ), asyncSelector );
+         return FromTransformCallback( enumerable, asyncSelector, ( e, s ) => new SelectManyAsyncEnumeratorAsync<T, U>( e, s ) );
+      }
+
    }
 
    internal sealed class SelectManyEnumeratorSync<TSource, TResult> : IAsyncEnumerator<TResult>
@@ -218,6 +255,134 @@ namespace AsyncEnumeration.Implementation.Provider
 
          return this._state != ENDED;
       }
+   }
+
+   internal sealed class SelectManyAsyncEnumerator<TSource, TResult> : IAsyncEnumerator<TResult>
+   {
+      private readonly IAsyncEnumerator<TSource> _source;
+      private readonly Func<TSource, Task<IEnumerable<TResult>>> _selector;
+      private readonly LinkedList<TResult> _list;
+
+      public SelectManyAsyncEnumerator(
+         IAsyncEnumerator<TSource> source,
+         Func<TSource, Task<IEnumerable<TResult>>> selector
+         )
+      {
+         this._source = source;
+         this._selector = selector;
+         this._list = new LinkedList<TResult>();
+      }
+
+
+      public async Task<Boolean> WaitForNextAsync()
+      {
+         var stack = this._list;
+         // Discard any previous items
+         stack.Clear();
+         // We must use the predicate in this method, since this is our only asynchronous method while enumerating
+         while ( stack.Count == 0 && await this._source.WaitForNextAsync() )
+         {
+            Boolean success;
+            do
+            {
+               var next = this._source.TryGetNext( out success );
+               IEnumerable<TResult> items;
+               if ( success && ( items = await this._selector( next ) ) != null )
+               {
+                  foreach ( var item in items )
+                  {
+                     stack.AddLast( item );
+                  }
+
+               }
+            } while ( success );
+         }
+
+         return stack.Count > 0;
+
+      }
+
+      public TResult TryGetNext( out Boolean success )
+      {
+         success = this._list.Count > 0;
+         TResult retVal;
+         if ( success )
+         {
+            retVal = this._list.First.Value;
+            this._list.RemoveFirst();
+         }
+         else
+         {
+            retVal = default;
+         }
+         return retVal;
+      }
+
+      public Task DisposeAsync()
+         => this._source.DisposeAsync();
+
+   }
+
+   internal sealed class SelectManyAsyncEnumeratorAsync<TSource, TResult> : IAsyncEnumerator<TResult>
+   {
+      private readonly IAsyncEnumerator<TSource> _source;
+      private readonly Func<TSource, Task<IAsyncEnumerable<TResult>>> _selector;
+      private readonly LinkedList<TResult> _list;
+
+      public SelectManyAsyncEnumeratorAsync(
+         IAsyncEnumerator<TSource> source,
+         Func<TSource, Task<IAsyncEnumerable<TResult>>> selector
+         )
+      {
+         this._source = source;
+         this._selector = selector;
+         this._list = new LinkedList<TResult>();
+      }
+
+
+      public async Task<Boolean> WaitForNextAsync()
+      {
+         var list = this._list;
+         // Discard any previous items
+         list.Clear();
+         // We must use the predicate in this method, since this is our only asynchronous method while enumerating
+         while ( list.Count == 0 && await this._source.WaitForNextAsync() )
+         {
+            Boolean success;
+            do
+            {
+               var next = this._source.TryGetNext( out success );
+               IAsyncEnumerable<TResult> items;
+               if ( success && ( items = await this._selector( next ) ) != null )
+               {
+                  await items.EnumerateAsync( item => list.AddLast( item ) );
+               }
+            } while ( success );
+         }
+
+         return list.Count > 0;
+
+      }
+
+      public TResult TryGetNext( out Boolean success )
+      {
+         success = this._list.Count > 0;
+         TResult retVal;
+         if ( success )
+         {
+            retVal = this._list.First.Value;
+            this._list.RemoveFirst();
+         }
+         else
+         {
+            retVal = default;
+         }
+         return retVal;
+      }
+
+      public Task DisposeAsync()
+         => this._source.DisposeAsync();
+
    }
 
 }

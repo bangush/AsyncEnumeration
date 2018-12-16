@@ -164,6 +164,12 @@ namespace AsyncEnumeration.Abstractions
       public IAsyncEnumerable<U> SelectMany<T, U>( IAsyncEnumerable<T> enumerable, Func<T, IAsyncEnumerable<U>> asyncSelector )
          => EmptyAsync<U>.Enumerable;
 
+      public IAsyncEnumerable<U> SelectMany<T, U>( IAsyncEnumerable<T> enumerable, Func<T, Task<IEnumerable<U>>> selector )
+         => EmptyAsync<U>.Enumerable;
+
+      public IAsyncEnumerable<U> SelectMany<T, U>( IAsyncEnumerable<T> enumerable, Func<T, Task<IAsyncEnumerable<U>>> asyncSelector )
+         => EmptyAsync<U>.Enumerable;
+
       public IAsyncEnumerable<T> Skip<T>( IAsyncEnumerable<T> enumerable, Int32 amount )
          => enumerable;
 
