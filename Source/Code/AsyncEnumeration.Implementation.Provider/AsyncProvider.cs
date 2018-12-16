@@ -6,9 +6,15 @@ using UtilPack;
 
 namespace AsyncEnumeration.Implementation.Provider
 {
-
+   /// <summary>
+   /// This class implements <see cref="IAsyncProvider"/> in such way that all returned <see cref="IAsyncEnumerable{T}"/>s perform within the same process.
+   /// Instead of using constructor to create new instances of this class, use the <see cref="Instance"/> static property.
+   /// </summary>
    public sealed partial class DefaultAsyncProvider : IAsyncProvider
    {
+      /// <summary>
+      /// Gets the default, stateless, instance of this <see cref="DefaultAsyncProvider"/>.
+      /// </summary>
       public static IAsyncProvider Instance { get; } = new DefaultAsyncProvider();
 
       private DefaultAsyncProvider()
@@ -34,20 +40,11 @@ namespace AsyncEnumeration.Implementation.Provider
       }
 
 
-      /// <summary>
-      /// This is helper utility class to provide callback-based <see cref="IAsyncEnumerator{T}"/> creation.
-      /// </summary>
-      /// <typeparam name="T">The type of items being enumerated.</typeparam>
       private sealed class EnumerableWrapper<T, U> : IAsyncEnumerable<U>
       {
          private readonly IAsyncEnumerable<T> _enumerable;
          private readonly Func<IAsyncEnumerator<T>, IAsyncEnumerator<U>> _getEnumerator;
 
-         /// <summary>
-         /// Creates a new instance of <see cref="EnumerableWrapper{T}"/> with given callback.
-         /// </summary>
-         /// <param name="getEnumerator">The callback to create <see cref="IAsyncEnumerator{T}"/>.</param>
-         /// <exception cref="ArgumentNullException">If <paramref name="getEnumerator"/> is <c>null</c>.</exception>
          public EnumerableWrapper(
             IAsyncEnumerable<T> enumerable,
             Func<IAsyncEnumerator<T>, IAsyncEnumerator<U>> getEnumerator
@@ -68,11 +65,6 @@ namespace AsyncEnumeration.Implementation.Provider
          private readonly Func<IAsyncEnumerator<T>, TArg, IAsyncEnumerator<U>> _getEnumerator;
          private readonly TArg _arg;
 
-         /// <summary>
-         /// Creates a new instance of <see cref="EnumerableWrapper{T}"/> with given callback.
-         /// </summary>
-         /// <param name="getEnumerator">The callback to create <see cref="IAsyncEnumerator{T}"/>.</param>
-         /// <exception cref="ArgumentNullException">If <paramref name="getEnumerator"/> is <c>null</c>.</exception>
          public EnumerableWrapper(
             IAsyncEnumerable<T> enumerable,
             Func<IAsyncEnumerator<T>, TArg, IAsyncEnumerator<U>> getEnumerator,

@@ -16,6 +16,7 @@
  * limitations under the License. 
  */
 using AsyncEnumeration.Abstractions;
+using AsyncEnumeration.Observability;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UtilPack;
 
-namespace AsyncEnumeration.Observability
+namespace System.Collections.Generic
 {
    /// <summary>
    /// This interface augments <see cref="IAsyncEnumerable{T}"/> with observation aspect.

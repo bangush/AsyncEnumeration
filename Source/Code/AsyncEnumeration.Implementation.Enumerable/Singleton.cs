@@ -159,6 +159,7 @@ namespace AsyncEnumeration.Implementation.Enumerable
       /// </summary>
       /// <typeparam name="T">The type of this value.</typeparam>
       /// <param name="value">This value</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
       /// <returns><see cref="IAsyncEnumerable{T}"/> containing only this value.</returns>
       public static IAsyncEnumerable<T> AsSingletonAsync<T>(
          this T value,
@@ -173,6 +174,7 @@ namespace AsyncEnumeration.Implementation.Enumerable
       /// </summary>
       /// <typeparam name="T">The type of this value.</typeparam>
       /// <param name="task">The task acquiring this value.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
       /// <returns><see cref="IAsyncEnumerable{T}"/> containing only this value.</returns>
       /// <exception cref="NullReferenceException">If this <see cref="Task{TResult}"/> is <c>null</c>.</exception>
       public static IAsyncEnumerable<T> AsSingletonAsync<T>(
@@ -185,6 +187,7 @@ namespace AsyncEnumeration.Implementation.Enumerable
       /// </summary>
       /// <typeparam name="T">The type of this value.</typeparam>
       /// <param name="task">The task acquiring this value.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
       /// <returns><see cref="IAsyncEnumerable{T}"/> containing only this value.</returns>
       public static IAsyncEnumerable<T> AsSingletonAsync<T>(
          this ValueTask<T> task,

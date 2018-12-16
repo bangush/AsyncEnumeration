@@ -60,7 +60,7 @@ namespace AsyncEnumeration.Observability
    }
 
    /// <summary>
-   /// This interface groups together all events which may occur when enumerating a <see cref="IAsyncEnumeratorObservable{T, TMetadata}"/> which also has a metadata object bound to it.
+   /// This interface groups together all events which may occur when enumerating a <see cref="IAsyncEnumerableObservable{T, TMetadata}"/> which also has a metadata object bound to it.
    /// </summary>
    /// <typeparam name="T">The type of the items being enumerated. This parameter is covariant.</typeparam>
    /// <typeparam name="TMetadata">The type of the metadata. This parameter is covariant.</typeparam>
@@ -104,9 +104,9 @@ namespace AsyncEnumeration.Observability
    public interface ObjectWithMetadata<out TMetadata>
    {
       /// <summary>
-      /// Gets the metadata object supplied to this <see cref="IAsyncEnumeratorObservable{T, TMetadata}"/> at creation time.
+      /// Gets the metadata object supplied to this <see cref="IAsyncEnumerableObservable{T, TMetadata}"/> at creation time.
       /// </summary>
-      /// <value>The metadata object supplied to this <see cref="IAsyncEnumeratorObservable{T, TMetadata}"/> at creation time.</value>
+      /// <value>The metadata object supplied to this <see cref="IAsyncEnumerableObservable{T, TMetadata}"/> at creation time.</value>
       TMetadata Metadata { get; }
    }
 
@@ -142,7 +142,7 @@ namespace AsyncEnumeration.Observability
    }
 
    /// <summary>
-   /// This interface augments <see cref="EnumerationStartedEventArgs"/> with metadata object given to <see cref="IAsyncEnumeratorObservable{T, TMetadata}"/>.
+   /// This interface augments <see cref="EnumerationStartedEventArgs"/> with metadata object given to <see cref="IAsyncEnumerableObservable{T, TMetadata}"/>.
    /// </summary>
    /// <typeparam name="TMetadata">The type of the metadata. This parameter is covariant.</typeparam>
    public interface EnumerationStartedEventArgs<out TMetadata> : EnumerationStartedEventArgs, ObjectWithMetadata<TMetadata>
@@ -151,7 +151,7 @@ namespace AsyncEnumeration.Observability
    }
 
    /// <summary>
-   /// This interface augments <see cref="EnumerationEndedEventArgs"/> with metadata object given to <see cref="IAsyncEnumeratorObservable{T, TMetadata}"/>.
+   /// This interface augments <see cref="EnumerationEndedEventArgs"/> with metadata object given to <see cref="IAsyncEnumerableObservable{T, TMetadata}"/>.
    /// </summary>
    /// <typeparam name="TMetadata">The type of the metadata. This parameter is covariant.</typeparam>
    public interface EnumerationEndedEventArgs<out TMetadata> : EnumerationStartedEventArgs<TMetadata>, EnumerationEndedEventArgs
@@ -160,7 +160,7 @@ namespace AsyncEnumeration.Observability
    }
 
    /// <summary>
-   /// This interface augments <see cref="EnumerationItemEventArgs{T}"/> with metadata object given to <see cref="IAsyncEnumeratorObservable{T, TMetadata}"/>.
+   /// This interface augments <see cref="EnumerationItemEventArgs{T}"/> with metadata object given to <see cref="IAsyncEnumerableObservable{T, TMetadata}"/>.
    /// </summary>
    /// <typeparam name="T">The type of the items being enumerated. This parameter is covariant.</typeparam>
    /// <typeparam name="TMetadata">The type of the metadata. This parameter is covariant.</typeparam>
