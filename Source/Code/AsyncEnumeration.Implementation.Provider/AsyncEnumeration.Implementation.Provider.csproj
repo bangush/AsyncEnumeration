@@ -20,7 +20,7 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <AssemblyTitle>$(AssemblyName)</AssemblyTitle>
-    <Description>Library containing IAsyncEnumerable, and async LINQ methods.</Description>
+    <Description>Library containing default (in-process) implementation of AsyncProvider, which allows hooking into aLINQ methods. The AsyncProvider is defined in AsyncEnumeration.Abstractions package.</Description>
   </PropertyGroup>
 
   <!-- NuGet package stuff -->
@@ -28,9 +28,9 @@
     <PackageId>$(AssemblyName)</PackageId>
     <PackageVersion>$(VersionPrefix)</PackageVersion>
     <PackageVersion Condition=" '$(VersionSuffix)' != ''">$(PackageVersion)-$(VersionSuffix)</PackageVersion>
-    <PackageReleaseNotes>Fixed a bug occuring under special circumstances in the async version of TakeWhile aLINQ method, causing the enumeration not to stop when needed.</PackageReleaseNotes>
-    <PackageTags>utility async enumerable enumerator</PackageTags>
-    <Title>Asynchronous Enumeration</Title>
+    <PackageReleaseNotes>Initial release (was previously part of UtilPack.AsyncEnumeration package).</PackageReleaseNotes>
+    <PackageTags>utility async enumerable linq alinq</PackageTags>
+    <Title>Asynchronous Enumeration: IAsyncProvider Implementation</Title>
   </PropertyGroup>
 
   <Import Project="$(CIPropsFilePath)" Condition=" '$(CIPropsFilePath)' != '' and Exists('$(CIPropsFilePath)') " />
