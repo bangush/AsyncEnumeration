@@ -6,21 +6,24 @@ cache:
   - 'nuget-package-dir'
   - 'docker-images'
   - 'v4-ref-assemblies'
+  - 'dotnet-tools'
+  - 'coverage-tools'
 
 environment:
   RELATIVE_NUGET_PACKAGE_DIR: 'nuget-package-dir/'
   RELATIVE_CS_OUTPUT: 'output/'
   CI_FOLDER: 'CIPipeline'
   DEPLOYABLE_BRANCH: 'HEAD'
-  DOTNET_VERSION: '2.1'
+  DOTNET_VERSION: '2.2'
   DEPLOY_NUGET_SOURCE: 'https://api.nuget.org/v3/index.json'
-  DEPLOY_NUGET_NO_SYMBOLS: true
   ADDITIONAL_VOLUME_DIRECTORIES: 'v4-ref-assemblies'
   ASSEMBLY_SIGN_KEY:
     secure: uv6ZmcDLBG+//mfWJ1euglELHr3yWxE/AFFukTbLL5H7A1vlZj+tqmac+d9MtcUnWLwQ0S614RmDvpzPcJbmPry1+LYb95K5m8lyv1LirnTjyvoBkaPEu8llT8vf0H2id0x53nlPs5GBCwKrqawphJNJRLVvw4bY3A6nLncRtwB+594tGp5if6g7OFhKBvUnZOzA/302ANQ16VDNyCy+eFSyRRinWlXxjKZKqvFdXD01fb+A9e3UaSNmqtVxqH+MU8V/GIBwRUWBp7oIW+ou4bqUygvW4OFBQTmfsptReFSM1e19NdTwnc8KRFrgT2dM4FlgVikjfHA9jjsAj2wMxIZ75LJ4miYKlTPS+mXQkRflUdLnLPPnGQpbtPz2I1RVgZR63nMq7D8k+OrFWPvFJ9u/31IipjftgrjSZS1oC3NJSasH+L49wj4/4GBuzOcb8/iJwH38e5nEVGjlaIg/J4YmZOF/KKJFY5giklM/Ap4YjMThS8C318lwqs3E0J4rlhlgOFhoQI4OSqCfzfVkSE24VxhUetCuplD6Ul0mbHr6IAj3B+yu6Cgxi1U57woMTqsKvq/RPScEX3tCm3sJu/3s0dUzYn8NEfmSSIoRMSN4pluFFsTqNL2URJEL59I/72S2rciQjlKjNQon3LB95g9xn7utJeGECHZHA19pdSCFABIyfEksPyRofCJOdwvKliS+Uxfrq4STQy7ubwPC+DYis2LceBft3oylqA0VDs/qx69kyQ0lA8Du26uRYWw0Tjvf36CrFiMo5w82rzcanhhMtxRpFRHDivEe59addLcc9KK37ehus/1Snz1Jv2MjmnLz/L6gwbfq40z+Y9gMZ0yneICoaGBWVu/DffJ+2ma63wn+Q3Wgthj4/d1Q2TnYHCcGeJMDFNZTjUQfnA6b4FZTaZi7gu9NGpXB+9JRyBcYLEZUi2gid1FS13VE96Dn5VCR+qzCNs2Z2ycmAqEhKl192tnKOxgOngBXzmfkmm45nqAZ+IbfN/NnkWB5iFzR5CDfxB3kxaADda/lLTPe/A7due5BGdwzlCibHNX839dZdkLq+xFng0ib1//M3hnpR8WE+Okrjx+wtPB1xhgpb+22bAxics5kO/W/rbmVUHBKVB7QKJAmC/Qgwx7xu9GpaW7vjLDcRB1jx6SbCiXGH8I5aL3eF2+OnZqKk4BEhpHZWX+OiIVRBoovAvvGkfipJ3WMI1FOcr05O68Y6lyTRbHE6sMoXYhR6OlNu9gbazE9F/Dcj7hQpkJ5aft0TONTjVusMB8+qYkpENCOXuJ+mlX6cSfDgvZBapdmmDl8DOSfrMzLspXuY6q8QA4xzbQvDHGhSnuBHcDkKpF2foTc3K7HFVzbCJf8s9E3V8XY4Fs2xhIdsbYdZJy57wDlKdYFOnIzug2TH7i4h+Vw1kHPig6PeQSlmLatNmwlo6gfZxl1+bfasDbxonzMY2rBD6xX3u6bWDMlkQogxFHIL6/23eUFP/PkEf2s0c4Yg8sRqlFJDRJBvS0qouQSss+bhxzOHwzagB77DyoOeBoPSv4xThKOrlir7dJyxjPO4kE1aPnevhsZdtxjHXumKuvMR26yVLukXCnZwBEuNdercE/ZDkr8kxnp9BriXrEJajMCIQhE9AXSdSXbSrYcf9h3tigUo1UCmHxGPvMvLZHZSkwO4BhNOWOMH5RRlOvk8MKZceKRUFtn6BybVD0Wb2uM3DwSCYr0ldRSgPexPXPMcOP0Wx+GfYwR9nGlR1wt/JrATecUUFZ2dtdJcCThws7RN+g/aMjuaDm91nnEjmEq2OcFtDahQ1uGddZ+q3h+qnd5xZIdwSS5ZV9Lw/bdfiOIv7SBVnNjVZBA3VE1AdbeLPl50SyAfgbvG+/HVQwBAlYPVRZ6lz5Q1Oth+19Ajkrti3TUbsOL0x4qH7s3031YNtGRENGWAR6YyaCm/z2jHF6D0gU75HOystB4CfdK+tBsdhpP+Ymy/o3PCedR4NvFzL/FhiDPK+aqdRaiOZvLKn3FEMcIqS3BSTsbmhoVxQtIRpTfmolW0u3rIU4nhlyTRl0CczUvFvZ9MRFYaL7YEXVsdba5cQPLxlxK2HJsP5pO+qlv4/1/+jTJX3LcGwUKO06K9tmN0wa7iak7qew5WgnuR06cTVMw7PWxA1TgeDelhBa0YiNaupts+tiSVj0uZueYD3DVOT4uYdFS3kTKkM1qS0lJ89UHm+cO/2LZ6198Vk377g4AgMREMxayO+nautFnG95itPReDLTF0lo3fHZRD2e/BG/SgGasx0xFTFEo/dzWZ/BkStkjXKggZWmR97/WVMcOhf0GnQ8j/E0BPNLW/Mfvd95rb8OxDfCKfBs4cHICQotodPeZy8RFvnS/uAhleoAdvDH0aUcDT98oJfTDeFpYQsmFsbuwJ2LnBMJiOvEcpiJDzM4mbJby8x0l1hEUsoMLeWRGI35Q8tlfBz4meMPsJFajl++sCue3gh8AvbgOzXneOBn6Nxy1VIasAInTn9ndWD8WR+PqaMAplDQ39C0gEoxs09E+bSMROAwTt2mZuDmr1GuzbEMBPYmz42agRwCwq6M1OBAZVZbLb4zipvTtAWt1RbUpf/7DCkR9ceIGP8eki6mYtaZ6BgcQD6mps6XpF3vlYzKq1ptCA2n7E+NKqqx61GXBeA1hujj9ZZr6gGJFfkFCr/lgwsKyIYxavhz5iWkHi/ceWK3395k+1jh+e7+qZQv5Ux2y5EgI+ou/DGFDPeIAPEQU1WCIBzvTc0Fwr7PfY8XMxe0+n7IzDUqEEvtlOiDxksVILfe4WYAwfvXeM9fwUTzbMnVyQ+Gd/pmqEMqHTUWX9QW1QumZjhc4AmIVNYH+amdKcLWB++rD1CZ9z34QtBhYhJVEewj+3sDeStOS6SjLZa20xtVEUKamRtCzkMtwJCIrrIMdffkY3qyMVUXhM6HC1csc00dnshaiB00GE048mfguMMAPv8l43JOrja9HzkQhF4o1x2Kohgvts+QWbm6P6vII1uCD/kG1Y4X797BmbkxIsO4pVbGu+VnkNRNBwSK+l2gVtEfqOX+j0n+x8J+TTtYX1qLti+7MrLvPfNdrqZkX60rPlHImmLZCqemcebswndFu0izoCnPgOlGKMYbQBdWRSYgdr7PW3RAmSX7l7ZFPe3juMqShUtHiqmK25iimjqfRengluO3H22M1GItZDK4/S6InvSSctlgu2Wlvql8t4nxjgaKZ1Gy6S6QjqkYiNRM7vpxPzIYj8aHnVNoHgMHIq4Dd7yqX/8uJUfRk3mT7IV+hdL+4t//O7T6Ll0972T5Ier7+rs5jjifD5kBqs57QUJQda2OgHG8EKO67E7rE2q6AExjTJIHnRSyXjmOXRSQwJZ7QnYNdgJpzHqB5RrIEPimiY28e4j6Bb4cdnLtjzH4SPVktbAUdaWGh7e5g4crR7YWo/tttZ/SodWGFqhBjKsbjUxOivMIN8J88M3OZsF9MD2ih/7pAMeV+yYfTnVMokbAA+3cLWhJuNId0zIVPyLVdacwmgraxoedobRTEh9pDFtD/u5PHBgSN2XortLeMsRquzmgDXDuj1VK7jNJRUS8DHOZ7CWVSpnT/lp+hwlK79EgpaS1sYM1bl+Rltg0/ImxcpMbAPGLqzrvg9Tv/OSDGxBKWhCnK7lL/U2ank4+y3Vd3pAnbCks7jq/3fR84i90zTZPXvm+EIbrpQgdp5XXsaRCG0XGGm6CWfcurbINEjgYFbrgxnZvuezBPWmaUkjVLK1AtjaeL+soD9qCahl2+AUmeLSMA1v+cESuWE4EUT5cB8j8LIqXQz1977tU08r2CIaMheuFcOMmGZO4If+IrTZ+OOtZSsPoNudbiyCPydEEIgl5OVog0NHPkvPj090YZWGAhafdVAcuka3CBL+WRxKEAoA+085EuLNlrxnDjlUSSZ5pNU1Ss8L0Qv4dpZkvSTovi5o5tSplpq5oKMNyMDKVX7ksBZhl6abBOFXyT5NFXBtMGDbSfD+MjS5CHgZMXGhfk8VTwRTN4QM5/tYSy373hiVNyedjMGYuQwvJQ9Jdtg5gpSxnDcfK52Dnl4Vgr4R0lj83T4tlzSpW3O4uLwRJ5cmZ8b77HuguUCcWOHRI=
   DEPLOY_NUGET_API_KEY:
     secure: BWuVSntv5K+zablayvFPdV/vjzplCYFQ8dbh58Pxmk9h42AKBiD79CC1tGfu6wgZ
-  
+  CODECOV_TOKEN:
+    secure: bw9pUcPRrxTHaO9fFDxC3zAA7UFxGE7+YOBxsF9HH5KDcsBo/wY8CkYzO3jpKAiv
+
 init:
   - sh: git config --global core.autocrlf false
   - sh: appveyor UpdateBuild -Version "build-${APPVEYOR_REPO_COMMIT:0:8}-${APPVEYOR_BUILD_NUMBER}"
@@ -40,7 +43,8 @@ build_script:
   - sh: 'sudo chown -R `id -u` "${APPVEYOR_BUILD_FOLDER}/${RELATIVE_NUGET_PACKAGE_DIR}"'
 
 test_script:
-  - sh: '"${APPVEYOR_BUILD_FOLDER}/git/${CI_FOLDER}/test.sh" "${APPVEYOR_BUILD_FOLDER}/git/${CI_FOLDER}/appveyor/add_tests.sh"'
+  # Fix auto-detection of AppVeyor: in Ubuntu image, these properties are all-lowercase, but the codecov script checks for first letter uppercase.
+  - sh: 'CI=True APPVEYOR=True "${APPVEYOR_BUILD_FOLDER}/git/${CI_FOLDER}/test.sh" "${APPVEYOR_BUILD_FOLDER}/git/${CI_FOLDER}/appveyor/add_tests.sh"'
   - sh: 'sudo chown -R `id -u` "${APPVEYOR_BUILD_FOLDER}/${RELATIVE_CS_OUTPUT}"'
   - sh: 'sudo chown -R `id -u` "${APPVEYOR_BUILD_FOLDER}/${RELATIVE_NUGET_PACKAGE_DIR}"'
 
