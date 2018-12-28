@@ -16,6 +16,7 @@
  * limitations under the License. 
  */
 using AsyncEnumeration.Abstractions;
+using AsyncEnumeration.Implementation.Enumerable;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,133 +24,137 @@ using System.Threading;
 using System.Threading.Tasks;
 using UtilPack;
 
-namespace AsyncEnumeration.Implementation.Enumerable
+namespace AsyncEnumeration
 {
-   internal sealed class SingletonEnumerator<T> : IAsyncEnumerator<T>
+
+   namespace Implementation.Enumerable
    {
-      private const Int32 STATE_INITIAL = 0;
-      private const Int32 STATE_WAIT_CALLED = 1;
-      private const Int32 STATE_GET_CALLED = 2;
-
-      private readonly T _value;
-      private Int32 _state;
-
-      public SingletonEnumerator( T value )
-         => this._value = value;
-
-      public Task<Boolean> WaitForNextAsync()
-         => TaskUtils.TaskFromBoolean( Interlocked.CompareExchange( ref this._state, STATE_WAIT_CALLED, STATE_INITIAL ) == STATE_INITIAL );
-
-      public T TryGetNext( out Boolean success )
+      internal sealed class SingletonEnumerator<T> : IAsyncEnumerator<T>
       {
-         success = Interlocked.CompareExchange( ref this._state, STATE_GET_CALLED, STATE_WAIT_CALLED ) == STATE_WAIT_CALLED;
-         return success ? this._value : default;
+         private const Int32 STATE_INITIAL = 0;
+         private const Int32 STATE_WAIT_CALLED = 1;
+         private const Int32 STATE_GET_CALLED = 2;
+
+         private readonly T _value;
+         private Int32 _state;
+
+         public SingletonEnumerator( T value )
+            => this._value = value;
+
+         public Task<Boolean> WaitForNextAsync()
+            => TaskUtils.TaskFromBoolean( Interlocked.CompareExchange( ref this._state, STATE_WAIT_CALLED, STATE_INITIAL ) == STATE_INITIAL );
+
+         public T TryGetNext( out Boolean success )
+         {
+            success = Interlocked.CompareExchange( ref this._state, STATE_GET_CALLED, STATE_WAIT_CALLED ) == STATE_WAIT_CALLED;
+            return success ? this._value : default;
+         }
+
+         public Task DisposeAsync()
+            => TaskUtils.CompletedTask;
       }
 
-      public Task DisposeAsync()
-         => TaskUtils.CompletedTask;
-   }
-
-   internal sealed class AsyncSingletonEnumerator<T> : IAsyncEnumerator<T>
-   {
-      private const Int32 STATE_INITIAL = 0;
-      private const Int32 STATE_WAIT_CALLED = 1;
-      private const Int32 STATE_GET_CALLED = 2;
-
-      private readonly Task<T> _asyncValue;
-      private Int32 _state;
-
-      public AsyncSingletonEnumerator( Task<T> asyncValue )
-         => this._asyncValue = ArgumentValidator.ValidateNotNull( nameof( asyncValue ), asyncValue );
-
-      public Task<Boolean> WaitForNextAsync()
+      internal sealed class AsyncSingletonEnumerator<T> : IAsyncEnumerator<T>
       {
-         Task<Boolean> retVal;
-         if ( Interlocked.CompareExchange( ref this._state, STATE_WAIT_CALLED, STATE_INITIAL ) == STATE_INITIAL )
+         private const Int32 STATE_INITIAL = 0;
+         private const Int32 STATE_WAIT_CALLED = 1;
+         private const Int32 STATE_GET_CALLED = 2;
+
+         private readonly Task<T> _asyncValue;
+         private Int32 _state;
+
+         public AsyncSingletonEnumerator( Task<T> asyncValue )
+            => this._asyncValue = ArgumentValidator.ValidateNotNull( nameof( asyncValue ), asyncValue );
+
+         public Task<Boolean> WaitForNextAsync()
          {
-            if ( this._asyncValue.IsCompleted )
+            Task<Boolean> retVal;
+            if ( Interlocked.CompareExchange( ref this._state, STATE_WAIT_CALLED, STATE_INITIAL ) == STATE_INITIAL )
             {
-               retVal = TaskUtils.True;
+               if ( this._asyncValue.IsCompleted )
+               {
+                  retVal = TaskUtils.True;
+               }
+               else
+               {
+                  retVal = this.ReallyWaitForNextAsync();
+               }
             }
             else
             {
-               retVal = this.ReallyWaitForNextAsync();
+               retVal = TaskUtils.False;
             }
+            return retVal;
          }
-         else
+
+         public T TryGetNext( out Boolean success )
          {
-            retVal = TaskUtils.False;
+            success = Interlocked.CompareExchange( ref this._state, STATE_GET_CALLED, STATE_WAIT_CALLED ) == STATE_WAIT_CALLED;
+            return success ? this._asyncValue.Result : default;
          }
-         return retVal;
-      }
 
-      public T TryGetNext( out Boolean success )
-      {
-         success = Interlocked.CompareExchange( ref this._state, STATE_GET_CALLED, STATE_WAIT_CALLED ) == STATE_WAIT_CALLED;
-         return success ? this._asyncValue.Result : default;
-      }
+         public Task DisposeAsync()
+            => TaskUtils.CompletedTask;
 
-      public Task DisposeAsync()
-         => TaskUtils.CompletedTask;
-
-      private async Task<Boolean> ReallyWaitForNextAsync()
-      {
-         await this._asyncValue;
-         return true;
-      }
-   }
-
-   internal sealed class ValueTaskAsyncSingletonEnumerator<T> : IAsyncEnumerator<T>
-   {
-      private const Int32 STATE_INITIAL = 0;
-      private const Int32 STATE_WAIT_CALLED = 1;
-      private const Int32 STATE_GET_CALLED = 2;
-
-      private readonly ValueTask<T> _asyncValue;
-      private Int32 _state;
-
-      public ValueTaskAsyncSingletonEnumerator( ValueTask<T> asyncValue )
-      {
-         this._asyncValue = asyncValue;
-      }
-
-      public Task<Boolean> WaitForNextAsync()
-      {
-         Task<Boolean> retVal;
-         if ( Interlocked.CompareExchange( ref this._state, STATE_WAIT_CALLED, STATE_INITIAL ) == STATE_INITIAL )
+         private async Task<Boolean> ReallyWaitForNextAsync()
          {
-            if ( this._asyncValue.IsCompleted )
+            await this._asyncValue;
+            return true;
+         }
+      }
+
+
+      internal sealed class ValueTaskAsyncSingletonEnumerator<T> : IAsyncEnumerator<T>
+      {
+         private const Int32 STATE_INITIAL = 0;
+         private const Int32 STATE_WAIT_CALLED = 1;
+         private const Int32 STATE_GET_CALLED = 2;
+
+         private readonly ValueTask<T> _asyncValue;
+         private Int32 _state;
+
+         public ValueTaskAsyncSingletonEnumerator( ValueTask<T> asyncValue )
+         {
+            this._asyncValue = asyncValue;
+         }
+
+         public Task<Boolean> WaitForNextAsync()
+         {
+            Task<Boolean> retVal;
+            if ( Interlocked.CompareExchange( ref this._state, STATE_WAIT_CALLED, STATE_INITIAL ) == STATE_INITIAL )
             {
-               retVal = TaskUtils.True;
+               if ( this._asyncValue.IsCompleted )
+               {
+                  retVal = TaskUtils.True;
+               }
+               else
+               {
+                  retVal = this.ReallyWaitForNextAsync();
+               }
             }
             else
             {
-               retVal = this.ReallyWaitForNextAsync();
+               retVal = TaskUtils.False;
             }
+            return retVal;
          }
-         else
+
+         public T TryGetNext( out Boolean success )
          {
-            retVal = TaskUtils.False;
+            success = Interlocked.CompareExchange( ref this._state, STATE_GET_CALLED, STATE_WAIT_CALLED ) == STATE_WAIT_CALLED;
+            return success ? this._asyncValue.Result : default;
          }
-         return retVal;
-      }
 
-      public T TryGetNext( out Boolean success )
-      {
-         success = Interlocked.CompareExchange( ref this._state, STATE_GET_CALLED, STATE_WAIT_CALLED ) == STATE_WAIT_CALLED;
-         return success ? this._asyncValue.Result : default;
-      }
+         public Task DisposeAsync() =>
+            TaskUtils.CompletedTask;
 
-      public Task DisposeAsync() =>
-         TaskUtils.CompletedTask;
-
-      private async Task<Boolean> ReallyWaitForNextAsync()
-      {
-         await this._asyncValue;
-         return true;
+         private async Task<Boolean> ReallyWaitForNextAsync()
+         {
+            await this._asyncValue;
+            return true;
+         }
       }
    }
-
 
 
    public static partial class AsyncEnumerationExtensions

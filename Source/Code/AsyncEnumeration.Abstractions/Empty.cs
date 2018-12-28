@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
+using AsyncEnumeration.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -22,7 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UtilPack;
 
-namespace AsyncEnumeration.Abstractions
+namespace AsyncEnumeration
 {
    /// <summary>
    /// This is utility class for various empty asynchronous enumerables and enumerators.

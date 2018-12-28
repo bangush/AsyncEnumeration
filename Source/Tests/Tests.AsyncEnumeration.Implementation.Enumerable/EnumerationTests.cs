@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
+using AsyncEnumeration;
 using AsyncEnumeration.Implementation.Enumerable;
 using AsyncEnumeration.Implementation.Provider;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Implementa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncEnumeration.Observability", "Code\AsyncEnumeration.Observability\AsyncEnumeration.Observability.csproj", "{A1928B28-0B97-4334-85B6-A75366DB7E01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.AsyncEnumeration.Implementation", "Tests\Tests.AsyncEnumeration.Implementation\Tests.AsyncEnumeration.Implementation.csproj", "{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.AsyncEnumeration.Implementation.Enumerable", "Tests\Tests.AsyncEnumeration.Implementation.Enumerable\Tests.AsyncEnumeration.Implementation.Enumerable.csproj", "{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.AsyncEnumeration.Implementation.Provider", "Tests\Tests.AsyncEnumeration.Implementation.Provider\Tests.AsyncEnumeration.Implementation.Provider.csproj", "{6FE0E282-8897-4759-A16E-EF7A871DBCED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6CEF639-9B46-4F3A-B08F-C0FC89FF503A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FE0E282-8897-4759-A16E-EF7A871DBCED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FE0E282-8897-4759-A16E-EF7A871DBCED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FE0E282-8897-4759-A16E-EF7A871DBCED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FE0E282-8897-4759-A16E-EF7A871DBCED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

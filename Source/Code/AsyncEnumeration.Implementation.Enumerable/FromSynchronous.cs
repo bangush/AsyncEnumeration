@@ -16,6 +16,7 @@
  * limitations under the License. 
  */
 using AsyncEnumeration.Abstractions;
+using AsyncEnumeration.Implementation.Enumerable;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,71 +24,71 @@ using System.Threading;
 using System.Threading.Tasks;
 using UtilPack;
 
-namespace AsyncEnumeration.Implementation.Enumerable
+namespace AsyncEnumeration
 {
-   internal sealed class ArrayEnumerator<T> : IAsyncEnumerator<T>
+   namespace Implementation.Enumerable
    {
-      private const Int32 NOT_FETCHED = 0;
-      private const Int32 FETCHED = 1;
-
-      private readonly T[] _array;
-      private Int32 _index;
-
-      public ArrayEnumerator( T[] array )
-         => this._array = ArgumentValidator.ValidateNotNull( nameof( array ), array );
-
-      public Task<Boolean> WaitForNextAsync()
-         => TaskUtils.TaskFromBoolean( this._index < this._array.Length );
-
-      public T TryGetNext( out Boolean success )
+      internal sealed class ArrayEnumerator<T> : IAsyncEnumerator<T>
       {
-         var array = this._array;
-         var idx = Interlocked.Increment( ref this._index );
-         success = idx <= array.Length;
-         return success ? array[idx - 1] : default;
-      }
+         private const Int32 NOT_FETCHED = 0;
+         private const Int32 FETCHED = 1;
 
-      public Task DisposeAsync()
-         => TaskUtils.CompletedTask;
-   }
+         private readonly T[] _array;
+         private Int32 _index;
 
-   internal sealed class SynchronousEnumerableEnumerator<T> : IAsyncEnumerator<T>
-   {
-      private const Int32 STATE_INITIAL = 0;
-      private const Int32 STATE_MOVENEXT_CALLED = 1;
-      private const Int32 STATE_ENDED = 2;
+         public ArrayEnumerator( T[] array )
+            => this._array = ArgumentValidator.ValidateNotNull( nameof( array ), array );
 
-      private readonly IEnumerator<T> _enumerator;
-      private Int32 _state;
+         public Task<Boolean> WaitForNextAsync()
+            => TaskUtils.TaskFromBoolean( this._index < this._array.Length );
 
-      public SynchronousEnumerableEnumerator( IEnumerator<T> syncEnumerator )
-         => this._enumerator = ArgumentValidator.ValidateNotNull( nameof( syncEnumerator ), syncEnumerator );
-
-      public Task<Boolean> WaitForNextAsync()
-         => TaskUtils.TaskFromBoolean( Interlocked.CompareExchange( ref this._state, STATE_MOVENEXT_CALLED, STATE_INITIAL ) == STATE_INITIAL && this._enumerator.MoveNext() );
-
-      public T TryGetNext( out Boolean success )
-      {
-         success = this._state == STATE_MOVENEXT_CALLED;
-         var retVal = success ? this._enumerator.Current : default;
-         if ( success && !this._enumerator.MoveNext() )
+         public T TryGetNext( out Boolean success )
          {
-            Interlocked.Exchange( ref this._state, STATE_ENDED );
+            var array = this._array;
+            var idx = Interlocked.Increment( ref this._index );
+            success = idx <= array.Length;
+            return success ? array[idx - 1] : default;
          }
-         return retVal;
+
+         public Task DisposeAsync()
+            => TaskUtils.CompletedTask;
       }
 
-
-      public Task DisposeAsync()
+      internal sealed class SynchronousEnumerableEnumerator<T> : IAsyncEnumerator<T>
       {
-         this._enumerator.Dispose();
-         return TaskUtils.CompletedTask;
+         private const Int32 STATE_INITIAL = 0;
+         private const Int32 STATE_MOVENEXT_CALLED = 1;
+         private const Int32 STATE_ENDED = 2;
+
+         private readonly IEnumerator<T> _enumerator;
+         private Int32 _state;
+
+         public SynchronousEnumerableEnumerator( IEnumerator<T> syncEnumerator )
+            => this._enumerator = ArgumentValidator.ValidateNotNull( nameof( syncEnumerator ), syncEnumerator );
+
+         public Task<Boolean> WaitForNextAsync()
+            => TaskUtils.TaskFromBoolean( Interlocked.CompareExchange( ref this._state, STATE_MOVENEXT_CALLED, STATE_INITIAL ) == STATE_INITIAL && this._enumerator.MoveNext() );
+
+         public T TryGetNext( out Boolean success )
+         {
+            success = this._state == STATE_MOVENEXT_CALLED;
+            var retVal = success ? this._enumerator.Current : default;
+            if ( success && !this._enumerator.MoveNext() )
+            {
+               Interlocked.Exchange( ref this._state, STATE_ENDED );
+            }
+            return retVal;
+         }
+
+
+         public Task DisposeAsync()
+         {
+            this._enumerator.Dispose();
+            return TaskUtils.CompletedTask;
+         }
+
       }
    }
-
-
-
-
 
    /// <summary>
    /// This class contains extension methods for types not defined in this assembly.
