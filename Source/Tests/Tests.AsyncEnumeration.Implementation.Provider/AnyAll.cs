@@ -32,10 +32,12 @@ namespace Tests.AsyncEnumeration.Implementation.Provider
    public class AnyAllTests
    {
       private readonly IEnumerable<Int32> _notEmpty;
+      private readonly IEnumerable<Int32> _empty;
 
       public AnyAllTests()
       {
          this._notEmpty = Enumerable.Repeat( 1, 1 );
+         this._empty = Empty<Int32>.Enumerable;
       }
 
       [TestMethod, Timeout( 1000 )]
@@ -46,8 +48,8 @@ namespace Tests.AsyncEnumeration.Implementation.Provider
             await this._notEmpty.AsAsyncEnumerable( DefaultAsyncProvider.Instance ).AnyAsync()
             );
          Assert.AreEqual(
-            Empty<Int32>.Enumerable.Any(),
-            await EmptyAsync<Int32>.Enumerable.AnyAsync()
+            this._empty.Any(),
+            await this._empty.AsAsyncEnumerable( DefaultAsyncProvider.Instance ).AnyAsync()
             );
       }
 

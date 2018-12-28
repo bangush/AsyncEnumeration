@@ -94,7 +94,7 @@ namespace AsyncEnumeration.Implementation.Provider
    {
       private readonly IAsyncEnumerator<T> _source;
       private readonly Func<T, ValueTask<U>> _selector;
-      private readonly Stack<U> _stack;
+      private readonly LinkedList<U> _list;
 
       public AsyncSelectEnumerator(
          IAsyncEnumerator<T> source,
@@ -103,16 +103,16 @@ namespace AsyncEnumeration.Implementation.Provider
       {
          this._source = ArgumentValidator.ValidateNotNull( nameof( source ), source );
          this._selector = ArgumentValidator.ValidateNotNull( nameof( asyncSelector ), asyncSelector );
-         this._stack = new Stack<U>();
+         this._list = new LinkedList<U>();
       }
 
       public async Task<Boolean> WaitForNextAsync()
       {
-         var stack = this._stack;
+         var list = this._list;
          // Discard any previous items
-         stack.Clear();
+         list.Clear();
          // We must use the selector in this method, since this is our only asynchronous method while enumerating
-         while ( stack.Count == 0 && await this._source.WaitForNextAsync() )
+         while ( list.Count == 0 && await this._source.WaitForNextAsync() )
          {
             Boolean success;
             do
@@ -120,19 +120,29 @@ namespace AsyncEnumeration.Implementation.Provider
                var item = this._source.TryGetNext( out success );
                if ( success )
                {
-                  stack.Push( await this._selector( item ) );
+                  list.AddLast( await this._selector( item ) );
                }
             } while ( success );
          }
 
-         return stack.Count > 0;
+         return list.Count > 0;
       }
 
 
       public U TryGetNext( out Boolean success )
       {
-         success = this._stack.Count > 0;
-         return success ? this._stack.Pop() : default;
+         success = this._list.Count > 0;
+         U retVal;
+         if ( success )
+         {
+            retVal = this._list.First.Value;
+            this._list.RemoveFirst();
+         }
+         else
+         {
+            retVal = default;
+         }
+         return retVal;
       }
 
       public Task DisposeAsync() => this._source.DisposeAsync();
