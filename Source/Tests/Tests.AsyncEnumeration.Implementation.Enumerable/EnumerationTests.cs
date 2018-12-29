@@ -28,7 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UtilPack;
 
-namespace Tests.AsyncEnumeration.Implementation
+namespace Tests.AsyncEnumeration.Implementation.Enumerable
 {
    [TestClass]
    public class SequentialTests
@@ -202,7 +202,7 @@ namespace Tests.AsyncEnumeration.Implementation
       [TestMethod]
       public async Task TestAsyncLINQ()
       {
-         var array = Enumerable.Range( 0, 10 ).ToArray();
+         var array = System.Linq.Enumerable.Range( 0, 10 ).ToArray();
          var enumerable = array.AsAsyncEnumerable( DefaultAsyncProvider.Instance );
          var array2 = await enumerable.ToArrayAsync();
          Assert.IsTrue( ArrayEqualityComparer<Int32>.ArrayEquality( array, array2 ) );

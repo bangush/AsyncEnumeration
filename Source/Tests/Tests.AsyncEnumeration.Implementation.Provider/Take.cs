@@ -38,6 +38,14 @@ namespace Tests.AsyncEnumeration.Implementation.Provider
          Assert.IsTrue( ArrayEqualityComparer<Int32>.ArrayEquality( array, Enumerable.Repeat( 1, 3 ).ToArray() ) );
       }
 
+      [TestMethod]
+      public async Task TestTake64()
+      {
+         var array = await AsyncEnumerable.Repeat( count: 5, item: 1, asyncProvider: DefaultAsyncProvider.Instance ).Take( 3L ).ToArrayAsync();
+
+         Assert.IsTrue( ArrayEqualityComparer<Int32>.ArrayEquality( array, Enumerable.Repeat( 1, 3 ).ToArray() ) );
+      }
+
       [TestMethod, Timeout( 1000 )]
       public async Task TestTakeNeverEnding()
       {
