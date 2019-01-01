@@ -29,30 +29,30 @@ namespace AsyncEnumeration
 
    namespace Implementation.Enumerable
    {
-      internal sealed class SingletonEnumerator<T> : IAsyncEnumerator<T>
-      {
-         private const Int32 STATE_INITIAL = 0;
-         private const Int32 STATE_WAIT_CALLED = 1;
-         private const Int32 STATE_GET_CALLED = 2;
+      //internal sealed class SingletonEnumerator<T> : IAsyncEnumerator<T>
+      //{
+      //   private const Int32 STATE_INITIAL = 0;
+      //   private const Int32 STATE_WAIT_CALLED = 1;
+      //   private const Int32 STATE_GET_CALLED = 2;
 
-         private readonly T _value;
-         private Int32 _state;
+      //   private readonly T _value;
+      //   private Int32 _state;
 
-         public SingletonEnumerator( T value )
-            => this._value = value;
+      //   public SingletonEnumerator( T value )
+      //      => this._value = value;
 
-         public Task<Boolean> WaitForNextAsync()
-            => TaskUtils.TaskFromBoolean( Interlocked.CompareExchange( ref this._state, STATE_WAIT_CALLED, STATE_INITIAL ) == STATE_INITIAL );
+      //   public Task<Boolean> WaitForNextAsync()
+      //      => TaskUtils.TaskFromBoolean( Interlocked.CompareExchange( ref this._state, STATE_WAIT_CALLED, STATE_INITIAL ) == STATE_INITIAL );
 
-         public T TryGetNext( out Boolean success )
-         {
-            success = Interlocked.CompareExchange( ref this._state, STATE_GET_CALLED, STATE_WAIT_CALLED ) == STATE_WAIT_CALLED;
-            return success ? this._value : default;
-         }
+      //   public T TryGetNext( out Boolean success )
+      //   {
+      //      success = Interlocked.CompareExchange( ref this._state, STATE_GET_CALLED, STATE_WAIT_CALLED ) == STATE_WAIT_CALLED;
+      //      return success ? this._value : default;
+      //   }
 
-         public Task DisposeAsync()
-            => TaskUtils.CompletedTask;
-      }
+      //   public Task DisposeAsync()
+      //      => TaskUtils.CompletedTask;
+      //}
 
       internal sealed class AsyncSingletonEnumerator<T> : IAsyncEnumerator<T>
       {
@@ -171,7 +171,7 @@ namespace AsyncEnumeration
          IAsyncProvider asyncProvider
          )
       {
-         return AsyncEnumerationFactory.FromGeneratorCallback( value, v => new SingletonEnumerator<T>( v ), asyncProvider );
+         return AsyncEnumerable.Repeat( value, 1, asyncProvider );
       }
 
       /// <summary>

@@ -112,6 +112,44 @@ namespace AsyncEnumeration.Implementation.Enumerable
             Neverending( asyncGenerator, asyncProvider ).Take( count );
       }
 
+      /// <summary>
+      /// Returns <see cref="IAsyncEnumerable{T}"/> that will return the result of given synchronous item factory callback specified amount of times.
+      /// </summary>
+      /// <typeparam name="T">The type of item to repeat.</typeparam>
+      /// <param name="generator">The synchronous callback to generate an item to repeat.</param>
+      /// <param name="count">Amount of times to repeat the item.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
+      /// <returns>An empty <see cref="IAsyncEnumerable{T}"/> if <paramref name="count"/> is <c>0</c> or less; otherwise returns <see cref="IAsyncEnumerable{T}"/> which will repeat result of calling <paramref name="generator"/> <paramref name="count"/> amount of times.</returns>
+      public static IAsyncEnumerable<T> Repeat<T>(
+         Func<T> generator,
+         Int64 count,
+         IAsyncProvider asyncProvider
+         )
+      {
+         return count <= 0 ?
+            EmptyAsync<T>.Enumerable :
+            Neverending( generator, asyncProvider ).Take( count );
+      }
+
+      /// <summary>
+      /// Returns <see cref="IAsyncEnumerable{T}"/> that will return the result of given potentially asynchronous item factory callback specified amount of times.
+      /// </summary>
+      /// <typeparam name="T">The type of item to repeat.</typeparam>
+      /// <param name="asyncGenerator">The potentially asynchronous callback to generate an item to repeat.</param>
+      /// <param name="count">Amount of times to repeat the item.</param>
+      /// <param name="asyncProvider">The <see cref="IAsyncProvider"/> for the returned <see cref="IAsyncEnumerable{T}"/>.</param>
+      /// <returns>An empty <see cref="IAsyncEnumerable{T}"/> if <paramref name="count"/> is <c>0</c> or less; otherwise returns <see cref="IAsyncEnumerable{T}"/> which will repeat result of calling <paramref name="asyncGenerator"/> <paramref name="count"/> amount of times.</returns>
+      public static IAsyncEnumerable<T> Repeat<T>(
+         Func<ValueTask<T>> asyncGenerator,
+         Int64 count,
+         IAsyncProvider asyncProvider
+         )
+      {
+         return count <= 0 ?
+            EmptyAsync<T>.Enumerable :
+            Neverending( asyncGenerator, asyncProvider ).Take( count );
+      }
+
 
       /// <summary>
       /// Returns <see cref="IAsyncEnumerable{T}"/> that will return numbers in given range specification.
@@ -168,7 +206,7 @@ namespace AsyncEnumeration.Implementation.Enumerable
                {
                   var prev = current;
                   success = current > target;
-                  current -= step;
+                  current += step; // Notice it is plus, since the "step" variable is always negative.
                   return prev;
                } );
             }, asyncProvider );
@@ -232,7 +270,7 @@ namespace AsyncEnumeration.Implementation.Enumerable
                {
                   var prev = current;
                   success = current > target;
-                  current -= step;
+                  current += step; // Notice it is plus, since the "step" variable is always negative.
                   return prev;
                } );
             }, asyncProvider );

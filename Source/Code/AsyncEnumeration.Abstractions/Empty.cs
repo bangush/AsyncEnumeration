@@ -118,14 +118,14 @@ namespace AsyncEnumeration
       public Task<Boolean> AnyAsync<T>( IAsyncEnumerable<T> source, Func<T, ValueTask<Boolean>> asyncPredicate )
          => TaskUtils.False;
 
-      public ValueTask<Int64> EnumerateAsync<T>( IAsyncEnumerable<T> enumerable )
-         => new ValueTask<Int64>( 0 );
+      //public ValueTask<Int64> EnumerateAsync<T>( IAsyncEnumerable<T> enumerable )
+      //   => new ValueTask<Int64>( 0 );
 
-      public ValueTask<Int64> EnumerateAsync<T>( IAsyncEnumerable<T> enumerable, Action<T> action )
-         => new ValueTask<Int64>( 0 );
+      //public ValueTask<Int64> EnumerateAsync<T>( IAsyncEnumerable<T> enumerable, Action<T> action )
+      //   => new ValueTask<Int64>( 0 );
 
-      public ValueTask<Int64> EnumerateAsync<T>( IAsyncEnumerable<T> enumerable, Func<T, Task> asyncAction )
-         => new ValueTask<Int64>( 0 );
+      //public ValueTask<Int64> EnumerateAsync<T>( IAsyncEnumerable<T> enumerable, Func<T, Task> asyncAction )
+      //   => new ValueTask<Int64>( 0 );
 
       public Task<T> FirstAsync<T>( IAsyncEnumerable<T> enumerable )
          => throw AsyncProviderUtilities.EmptySequenceException();
